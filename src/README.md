@@ -17,7 +17,7 @@
 Clone the project
 
 ```bash
-git clone git@gitlab.rnl.tecnico.ulisboa.pt:<REPO>
+git clone git@github.com:SrGesus/candidatura-dei-2024.git
 ```
 
 Go to the project directory
@@ -48,10 +48,10 @@ docker compose down
 
 ### Backend
 
-Create a copy of the `application-local.properties` file.
+Create a copy of the `application.properties` file.
 
 ```bash
-cp ./backend/src/main/resources/application-local.properties.example ./backend/src/main/resources/application-local.properties
+cp ./backend/src/main/resources/application.properties.example ./backend/src/main/resources/application.properties
 ```
 
 If you're running your database using Docker, the datasource variables should match the ones in `Docker-compose.yml`.
@@ -91,5 +91,5 @@ Access http://localhost:8081
 In order to access the database, you can use the following command:
 
 ```bash
-mysql -u root -p<password> -h 127.0.0.1 -P 7654 dmsdb
+psql -h localhost -p 7654 -U postgres dmsdb
 ```
