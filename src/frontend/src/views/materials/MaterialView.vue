@@ -32,7 +32,7 @@
       <v-chip>{{ item.type }}</v-chip>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon @click="editMaterial(item)" class="mr-2">mdi-pencil</v-icon>
+      <EditMaterialDialog :material="item" @material-edited="getMaterials" />
       <v-icon @click="deleteMaterial(item)">mdi-delete</v-icon>
     </template>
   </v-data-table>
@@ -45,6 +45,7 @@ import RemoteService from '@/services/RemoteService'
 
 import { reactive } from 'vue'
 import type MaterialDto from '@/models/materials/MaterialDto'
+import EditMaterialDialog from './EditMaterialDialog.vue'
 
 const search = ref('')
 const headers = [
@@ -71,12 +72,6 @@ async function getMaterials() {
       material.type = materialTypes[material.type as keyof typeof materialTypes]
       materials.push(material)
     })
-  })
-}
-
-function editMaterial(material: MaterialDto) {
-  RemoteService.updateMaterial(material).then(() => {
-    getMaterials()
   })
 }
 

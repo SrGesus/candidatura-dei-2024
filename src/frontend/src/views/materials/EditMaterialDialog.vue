@@ -1,17 +1,10 @@
 <template>
-  <div class="pa-4 text-center">
     <v-dialog v-model="dialog" max-width="400">
       <template v-slot:activator="{ props: activatorProps }">
-        <v-btn
-          class="text-none font-weight-regular"
-          prepend-icon="mdi-plus"
-          text="Adicionar Material"
-          v-bind="activatorProps"
-          color="primary"
-        ></v-btn>
+        <v-icon v-bind="activatorProps" class="mr-2">mdi-pencil</v-icon>
       </template>
 
-      <v-card prepend-icon="mdi-account" title="Novo Material">
+      <v-card prepend-icon="mdi-account" title="Editar Material">
         <v-card-text>
           <v-text-field label="Nome*" required v-model="newMaterial.name"></v-text-field>
 
@@ -43,7 +36,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -53,8 +45,13 @@ import RemoteService from '@/services/RemoteService'
 
 const dialog = ref(false)
 
-const emit = defineEmits(['material-created'])
+const props = defineProps<{
+  material: MaterialDto;
+}>();
 
+const emit = defineEmits(['material-edited'])
+
+const newMaterial = ref<MaterialDto>({ ...props.material })
 
 const typeMappings = {
   Chave: 'KEY',
@@ -62,19 +59,11 @@ const typeMappings = {
   Genérico: 'GENERIC'
 }
 
-const newMaterial = ref<MaterialDto>({
-  name: '',
-  type: ''
-})
-
 const saveMaterial = async () => {
   newMaterial.value.type = typeMappings[(newMaterial.value.type) as keyof typeof typeMappings]
 
-  await RemoteService.createMaterial(newMaterial.value)
-  newMaterial.value = {
-    name: '',
-    type: ''
-  }
-  emit('material-created')
+  await RemoteService.updateMaterial(newMaterial.value)
+  emit('material-edited')
 }
+
 </script>
