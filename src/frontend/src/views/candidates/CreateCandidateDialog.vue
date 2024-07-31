@@ -12,24 +12,16 @@
       </template>
 
       <v-card prepend-icon="mdi-account" title="Novo Material">
-        <v-form ref="form" @submit.prevent="submitForm()">
         <v-card-text>
+          <v-text-field label="Nome*" required v-model="newMaterial.name"></v-text-field>
 
-            <v-text-field 
-              label="Nome*" 
-              required 
-              v-model="newMaterial.name"
-              :rules="nameRules"
-            ></v-text-field>
-  
-            <v-autocomplete
-              :items="types"
-              :rules="typeRules"
-              label="Categoria*"
-              auto-select-first
-              required
-              v-model="newMaterial.type"
-            ></v-autocomplete>
+          <v-autocomplete
+            :items="['Chave', 'Cacifo', 'Genérico']"
+            label="Categoria*"
+            auto-select-first
+            required
+            v-model="newMaterial.type"
+          ></v-autocomplete>
         </v-card-text>
 
         <v-divider></v-divider>
@@ -40,13 +32,15 @@
           <v-btn text="Close" variant="plain" @click="dialog = false"></v-btn>
 
           <v-btn
-            type="submit"
             color="primary"
             text="Save"
             variant="tonal"
+            @click="
+              dialog = false;
+              saveMaterial()
+            "
           ></v-btn>
         </v-card-actions>
-        </v-form>
       </v-card>
     </v-dialog>
   </div>
@@ -58,17 +52,9 @@ import type MaterialDto from '@/models/materials/MaterialDto'
 import RemoteService from '@/services/RemoteService'
 
 const dialog = ref(false)
-const form = ref(null)
 
 const emit = defineEmits(['material-created'])
 
-const submitForm = async () => {
-  const { valid } = await form.value.validate()
-  if (valid) {
-    saveMaterial()
-    dialog.value = false;
-  }
-}
 
 const typeMappings = {
   Chave: 'KEY',
@@ -91,20 +77,4 @@ const saveMaterial = async () => {
   }
   emit('material-created')
 }
-
-const nameRules = [
-  name => {
-    return name ? true : 'Nome é obrigatório.'
-  },
-];
-
-const types = ['Chave', 'Cacifo', 'Genérico'];
-
-// FIXME wrong rule
-const typeRules = [
-  type => {
-    return type ? true : 'Tipo é obrigatório.'
-  },
-];
-
 </script>
