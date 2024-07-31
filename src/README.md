@@ -17,7 +17,7 @@
 Clone the project
 
 ```bash
-git clone git@gitlab.rnl.tecnico.ulisboa.pt:dei/candidaturas/dei-cms-sols-candidatos/dei-cms-gabriel-ferreira.git
+git clone git@gitlab.rnl.tecnico.ulisboa.pt:dei/candidaturas/dei-cms-sols-candidatos/dei-cms-gabriel-ferreira.git DMS
 ```
 
 Go to the project directory

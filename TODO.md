@@ -1,0 +1,20 @@
+# To Do:
+
+Tabelas:
+- [ ] candidatos a bolsas do DEI, guardando, para cada um, pelo menos o seu nome, IST ID, email e outros campos que considere relevantes;
+- [ ] bolsas do DEI, guardando, para cada uma, pelo menos o ID, a data de início, a data de fim, valor mensal, candidatos e outros campos que considere relevantes;
+
+Implementação:
+- [ ] Adicionar novos candidatos;
+- [ ] Visualizar todos os candidatos numa tabela de consulta rápida, contendo pelo menos nome e IST ID;
+- [ ] Atualizar e remover candidatos existentes;
+- [ ] Visualizar todas as bolsas em que um candidato está inscrito;
+- [ ] Visualizar todas as bolsas numa tabela de consulta rápida, contendo pelo menos ID, data de início e data de fim;
+- [ ] Visualizar uma bolsa em particular numa página dedicada, contendo pelo menos data de início, data de fim, valor mensal e candidatos inscritos;
+- [ ] Adicionar novas bolsas;
+- [ ] Atualizar e remover bolsas existentes;
+- [ ] Inscrever e desinscrever candidatos em bolsas existentes;
+- [ ] Dentro de uma bolsa, permitir avaliar candidatos, guardando, para cada um, a nota atribuída a cada categoria de avaliação (por exemplo, "Avaliação curricular", "Entrevista", "Exercício prático");
+- [ ] Dentro de uma bolsa, permitir mudar o peso de cada categoria de avaliação;
+- [ ] Dentro de uma bolsa, permitir visualizar a média final de cada candidato, calculada com base nas notas atribuídas e nos pesos das categorias de avaliação.
+- [ ] Dentro de uma bolsa, uma vez que as avaliações estejam concluídas, permitir selecionar o(s) candidato(s) vencedor(es) da bolsa.
