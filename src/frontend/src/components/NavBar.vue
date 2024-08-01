@@ -1,7 +1,11 @@
 <template>
   <v-app-bar>
+    <v-btn v-for="item in navbarItemsLeft" :key="item.name" :to="item.path">
+      {{ item.name }}
+      <v-icon color="contrast" :icon="item.icon"></v-icon>
+    </v-btn>
     <v-spacer></v-spacer>
-    <v-btn v-for="item in navbarItems" :key="item.name" :to="item.path">
+    <v-btn v-for="item in navbarItemsRight" :key="item.name" :to="item.path">
       {{ item.name }}
       <v-icon color="contrast" :icon="item.icon"></v-icon>
     </v-btn>
@@ -9,5 +13,8 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ navbarItems: { name: string; path: string; icon: string }[] }>()
+defineProps<{ 
+  navbarItemsRight: { name: string; path: string; icon: string }[],
+  navbarItemsLeft: { name: string; path: string; icon: string }[] 
+}>()
 </script>

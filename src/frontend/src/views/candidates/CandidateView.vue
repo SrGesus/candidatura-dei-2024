@@ -1,10 +1,10 @@
 <template>
   <v-row align="center">
     <v-col>
-      <h2 class="text-left ml-1">Listagem de Materiais</h2>
+      <h2 class="text-left ml-1">Listagem de Candidatos</h2>
     </v-col>
     <v-col cols="auto">
-      <CreateMaterialDialog @material-created="getMaterials" />
+      <CreateCandidateDialog @candidate-created="getCandidates" />
     </v-col>
   </v-row>
 
@@ -19,65 +19,50 @@
 
   <v-data-table
     :headers="headers"
-    :items="materials"
+    :items="candidates"
     :search="search"
     :custom-filter="fuzzySearch"
     class="text-left"
   >
-    <template v-slot:[`item.available`]="{ item }">
-      <v-icon v-if="item.available" color="success">mdi-check</v-icon>
-      <v-icon v-else color="error">mdi-close</v-icon>
-    </template>
-    <template v-slot:[`item.type`]="{ item }">
-      <v-chip>{{ item.type }}</v-chip>
-    </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <EditMaterialDialog :material="item" @material-edited="getMaterials" />
-      <v-icon @click="deleteMaterial(item)">mdi-delete</v-icon>
+      <EditCandidateDialog :candidate="item" @candidate-edited="getCandidates" />
+      <v-icon @click="deleteCandidate(item)">mdi-delete</v-icon>
     </template>
   </v-data-table>
 </template>
 
 <script setup lang="ts">
-import CreateMaterialDialog from '@/views/materials/CreateMaterialDialog.vue'
+import CreateCandidateDialog from '@/views/candidates/CreateCandidateDialog.vue'
 import { ref } from 'vue'
 import RemoteService from '@/services/RemoteService'
 
 import { reactive } from 'vue'
-import type MaterialDto from '@/models/materials/MaterialDto'
-import EditMaterialDialog from '@/views/materials/EditMaterialDialog.vue'
+import type CandidateDto from '@/models/candidates/CandidateDto'
+import EditCandidateDialog from '@/views/candidates/EditCandidateDialog.vue'
 
 const search = ref('')
 const headers = [
-  { title: 'ID', value: 'id', key: 'id' },
+  { title: 'IST ID', value: 'istId', key: 'istId' },
   { title: 'Name', value: 'name', key: 'name ' },
-  { title: 'Type', value: 'type', key: 'type' },
-  { title: 'Available', value: 'available', key: 'available' },
+  { title: 'E-Mail', value: 'email', key: 'email' },
   { title: 'Actions', value: 'actions', key: 'actions' }
 ]
 
-const materials: MaterialDto[] = reactive([])
+const candidates: CandidateDto[] = reactive([])
 
-const materialTypes = {
-  KEY: 'Chave',
-  LOCKER: 'Cacifo',
-  GENERIC: 'Genérico'
-}
-
-getMaterials()
-async function getMaterials() {
-  materials.splice(0, materials.length)
-  RemoteService.getMaterials().then(async (data) => {
-    data.forEach((material: MaterialDto) => {
-      material.type = materialTypes[material.type as keyof typeof materialTypes]
-      materials.push(material)
+getCandidates()
+async function getCandidates() {
+  candidates.splice(0, candidates.length)
+  RemoteService.getCandidates().then(async (data) => {
+    data.forEach((candidate: CandidateDto) => {
+      candidates.push(candidate)
     })
   })
 }
 
-function deleteMaterial(material: MaterialDto) {
-  RemoteService.deleteMaterial(material).then(() => {
-    getMaterials()
+function deleteCandidate(candidate: CandidateDto) {
+  RemoteService.deleteCandidate(candidate).then(() => {
+    getCandidates()
   })
 }
 

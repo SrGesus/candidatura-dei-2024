@@ -1,20 +1,36 @@
 <template>
-    <v-dialog v-model="dialog" max-width="400">
-      <template v-slot:activator="{ props: activatorProps }">
-        <v-icon v-bind="activatorProps" class="mr-2">mdi-pencil</v-icon>
-      </template>
+  <v-dialog v-model="dialog" max-width="400">
+    <template v-slot:activator="{ props: activatorProps }">
+      <v-icon v-bind="activatorProps" class="mr-2">mdi-pencil</v-icon>
+    </template>
 
-      <v-card prepend-icon="mdi-account" title="Editar Material">
+    <v-card prepend-icon="mdi-account" title="Novo Candidato">
+        <v-form ref="form" @submit.prevent="submitForm()">
         <v-card-text>
-          <v-text-field label="Nome*" required v-model="newMaterial.name"></v-text-field>
 
-          <v-autocomplete
-            :items="['Chave', 'Cacifo', 'Genérico']"
-            label="Categoria*"
-            auto-select-first
-            required
-            v-model="newMaterial.type"
-          ></v-autocomplete>
+          <v-number-input
+              label="IST ID*" 
+              required 
+              v-model.number="newCandidate.istId"
+              disabled
+            ></v-number-input>
+
+            <v-text-field 
+              label="Nome*" 
+              required 
+              v-model="newCandidate.name"
+              :rules="nameRules"
+            ></v-text-field>
+
+            <v-text-field 
+              label="E-Mail*" 
+              required 
+              v-model="newCandidate.email"
+              :rules="emailRules"
+              validate-on="blur"
+              inputmode="email"
+            ></v-text-field>
+
         </v-card-text>
 
         <v-divider></v-divider>
@@ -22,48 +38,69 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
+          <!-- TODO: Either make close reset the values or add a button to reset values -->
           <v-btn text="Close" variant="plain" @click="dialog = false"></v-btn>
 
           <v-btn
+            type="submit"
             color="primary"
             text="Save"
             variant="tonal"
-            @click="
-              dialog = false;
-              saveMaterial()
-            "
           ></v-btn>
         </v-card-actions>
+        </v-form>
       </v-card>
-    </v-dialog>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
+import { VNumberInput } from 'vuetify/labs/VNumberInput'
 import { ref } from 'vue'
-import type MaterialDto from '@/models/materials/MaterialDto'
 import RemoteService from '@/services/RemoteService'
+import CandidateDto from '@/models/candidates/CandidateDto';
 
 const dialog = ref(false)
+const form = ref(null)
 
 const props = defineProps<{
-  material: MaterialDto;
+  candidate: CandidateDto;
 }>();
 
-const emit = defineEmits(['material-edited'])
+const emit = defineEmits(['candidate-edited'])
 
-const newMaterial = ref<MaterialDto>({ ...props.material })
+const newCandidate = ref<CandidateDto>({ ...props.candidate })
 
-const typeMappings = {
-  Chave: 'KEY',
-  Cacifo: 'LOCKER',
-  Genérico: 'GENERIC'
+const submitForm = async () => {
+  const { valid } = await form.value.validate()
+  if (valid) {
+    saveCandidate()
+    dialog.value = false;
+  }
 }
 
-const saveMaterial = async () => {
-  newMaterial.value.type = typeMappings[(newMaterial.value.type) as keyof typeof typeMappings]
-
-  await RemoteService.updateMaterial(newMaterial.value)
-  emit('material-edited')
+const saveCandidate = async () => {
+  console.log(newCandidate.value)
+  await RemoteService.createCandidate(newCandidate.value)
+  newCandidate.value = {
+    istId: 0,
+    name: '',
+    email: ''
+  }
+  emit('candidate-edited')
 }
+
+const nameRules = [
+  name => {
+    return name ? true : 'Nome é obrigatório.'
+  },
+];
+
+const emailRules = [
+  email => {
+    // Regex doesn't cover all cases but is a sensible approximation
+    return /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+      .test(email) ? true : 'E-Mail inválido.'
+  },
+];
 
 </script>
