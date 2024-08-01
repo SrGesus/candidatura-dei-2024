@@ -20,6 +20,7 @@
               required 
               v-model.number="newCandidate.istId"
               :rules="istIdRules"
+              :min="0"
             ></v-number-input>
 
             <v-text-field 
