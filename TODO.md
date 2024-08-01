@@ -1,7 +1,7 @@
 # To Do:
 
 Tabelas:
-- [ ] candidatos a bolsas do DEI, guardando, para cada um, pelo menos o seu nome, IST ID, email e outros campos que considere relevantes;
+- [x] candidatos a bolsas do DEI, guardando, para cada um, pelo menos o seu nome, IST ID, email e outros campos que considere relevantes;
   - ist_id
   - nome
   - e-mail
@@ -10,6 +10,7 @@ Tabelas:
   - data inicio
   - data fim
   - valor mensal
+  - vagas
 
 ## Implementação:
 ### Candidatos:

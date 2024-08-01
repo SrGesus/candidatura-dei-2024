@@ -4,7 +4,7 @@
       <v-icon v-bind="activatorProps" class="mr-2">mdi-pencil</v-icon>
     </template>
 
-    <v-card prepend-icon="mdi-account" title="Novo Candidato">
+    <v-card prepend-icon="mdi-account" title="Editar Candidato">
         <v-form ref="form" @submit.prevent="submitForm()">
         <v-card-text>
 
@@ -80,12 +80,7 @@ const submitForm = async () => {
 
 const saveCandidate = async () => {
   console.log(newCandidate.value)
-  await RemoteService.createCandidate(newCandidate.value)
-  newCandidate.value = {
-    istId: 0,
-    name: '',
-    email: ''
-  }
+  await RemoteService.updateCandidate(newCandidate.value)
   emit('candidate-edited')
 }
 
