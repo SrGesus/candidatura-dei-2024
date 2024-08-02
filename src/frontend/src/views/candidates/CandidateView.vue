@@ -5,12 +5,12 @@
     </v-col>
     <v-col cols="auto">
       <CandidateDialog :edit="false" @candidate-saved="getCandidates">
-          <v-btn
-            class="text-none font-weight-regular"
-            prepend-icon="mdi-plus"
-            text="Adicionar Candidato"
-            color="primary"
-          ></v-btn>
+        <v-btn
+          class="text-none font-weight-regular"
+          prepend-icon="mdi-plus"
+          text="Adicionar Candidato"
+          color="primary"
+        ></v-btn>
       </CandidateDialog>  
     </v-col>
   </v-row>

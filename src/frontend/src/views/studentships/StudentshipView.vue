@@ -1,10 +1,17 @@
 <template>
-  <v-row align="center">
+  <v-row align="center" class="mb-2">
     <v-col>
       <h2 class="text-left ml-1">Listagem de Bolsas</h2>
     </v-col>
     <v-col cols="auto">
-      <CreateStudentshipDialog @studentship-created="getStudentships" />
+      <StudentshipDialog :edit="false" @studentship-saved="getStudentships">
+        <v-btn
+          class="text-none font-weight-regular"
+          prepend-icon="mdi-plus"
+          text="Adicionar Bolsa"
+          color="primary"
+        ></v-btn>
+      </StudentshipDialog>
     </v-col>
   </v-row>
 
@@ -26,16 +33,20 @@
   >
   <template v-slot:item="{ item }">
     <tr class="clickable-rows" @click="rowClick(item)">
-        <td>{{ item.id }}</td>
-        <td>{{ item.startDate }}</td>
-        <td>{{ item.endDate }}</td>
-        <td>{{ item.pay }}</td>
-        <td>{{ item.vacancies }}</td>
-        <td>
-          <EditStudentshipDialog style="cursor: pointer;" :studentship="item" @studentship-edited="getStudentships" />
+      <td>{{ item.id }}</td>
+      <td>{{ item.startDate }}</td>
+      <td>{{ item.endDate }}</td>
+      <td>{{ item.pay }}</td>
+      <td>{{ item.vacancies }}</td>
+      <td>
+        <v-row>
+          <StudentshipDialog :edit="item" :studentship="item" @studentship-saved="getStudentships">
+            <v-icon class="mr-2">mdi-pencil</v-icon>
+          </StudentshipDialog>
           <v-icon @click="deleteStudentship(item)">mdi-delete</v-icon>
-        </td>
-      </tr>
+        </v-row>
+      </td>
+    </tr>
   </template>
   
   </v-data-table>
@@ -46,14 +57,14 @@ const rowClick = (obj) => {
   console.log(obj)
   router.push({ name: 'studentship', params: { id: obj.id } })
 }
-import CreateStudentshipDialog from '@/views/studentships/CreateStudentshipDialog.vue'
-import EditStudentshipDialog from '@/views/studentships/EditStudentshipDialog.vue'
+
 import { ref } from 'vue'
 import RemoteService from '@/services/RemoteService'
 
 import { reactive } from 'vue'
 import type StudentshipDto from '@/models/studentships/StudentshipDto'
 import router from '@/router';
+import StudentshipDialog from './StudentshipDialog.vue';
 
 const search = ref('')
 const headers = [
