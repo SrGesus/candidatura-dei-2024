@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { VNumberInput } from 'vuetify/labs/VNumberInput'
+import { VNumberInput } from 'vuetify/labs/VNumberInput';
 import { VForm } from 'vuetify/lib/components/index.mjs';
 
 import { ref } from 'vue'
@@ -89,12 +89,13 @@ const candidate = ref<CandidateDto>(
   }
 )
 
-const submitForm = async () => {
-  const { valid } = await form.value!.validate()
-  if (valid) {
-    saveCandidate()
-    dialog.value = false;
-  }
+const submitForm = () => {
+  form.value!.validate().then(({valid}) => {
+    if (valid) {
+      saveCandidate()
+      dialog.value = false
+    }
+  })
 }
 
 const saveCandidate = async () => {
