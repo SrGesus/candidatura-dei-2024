@@ -8,7 +8,7 @@
         @click="back()"
       ></v-btn>
     </v-col>
-    <v-col class="d-flex align-center justify-start ml-1" style="gap: 10px;">
+    <v-col class="d-flex align-center justify-center ml-1" style="gap: 10px;">
       <v-icon>mdi-briefcase</v-icon>
       <h2>Bolsa</h2>
     </v-col>

@@ -17,19 +17,19 @@ public class EnrollmentDto {
         this.studentship = new StudentshipDto(enrollment.getStudentship());
     }
 
-    public CandidateDto getCandidateDto() {
+    public CandidateDto getCandidate() {
         return candidate;
     }
 
-    public void setCandidateDto(CandidateDto candidate) {
+    public void setCandidate(CandidateDto candidate) {
         this.candidate = candidate;
     }
 
-    public StudentshipDto getStudentshipDto() {
+    public StudentshipDto getStudentship() {
         return studentship;
     }
 
-    public void setStudentshipDto(StudentshipDto studentship) {
+    public void setStudentship(StudentshipDto studentship) {
         this.studentship = studentship;
     }
 

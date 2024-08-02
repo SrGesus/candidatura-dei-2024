@@ -1,5 +1,5 @@
 export default class StudentshipDto {
-    id?: string
+    id?: number
     startDate?: Date
     endDate?: Date
     pay?: number
