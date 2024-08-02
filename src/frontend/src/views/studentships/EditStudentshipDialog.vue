@@ -17,16 +17,26 @@
 
             <v-date-input
             label="Data de Início*" 
-            required 
+            required
+            readonly
             v-model="newStudentship.startDate"
             :rules="startDateRules"
+            prepend-icon=""
+            prepend-inner-icon="$calendar"
+            placeholder="dd/mm/yyyy"
+            min="2020-01-01"
           ></v-date-input>
           
           <v-date-input
             label="Data de Fim*" 
-            required 
+            required
+            readonly
             v-model="newStudentship.endDate"
             :rules="endDateRules"
+            prepend-icon=""
+            prepend-inner-icon="$calendar"
+            placeholder="dd/mm/yyyy"
+            min="2020-01-01"
           ></v-date-input>
 
           <v-number-input
@@ -70,12 +80,15 @@
 <script setup lang="ts">
 import { VNumberInput } from 'vuetify/labs/VNumberInput'
 import { VDateInput } from 'vuetify/labs/VDateInput'
+import { VForm } from 'vuetify/lib/components/index.mjs';
 import { ref } from 'vue'
+import type { Ref } from 'vue'
+
 import RemoteService from '@/services/RemoteService'
 import type StudentshipDto from '@/models/studentships/StudentshipDto';
 
 const dialog = ref(false)
-const form = ref(null)
+const form: Ref<null | VForm> = ref(null)
 
 const props = defineProps<{
   studentship: StudentshipDto;
@@ -85,12 +98,12 @@ const emit = defineEmits(['studentship-edited'])
 
 const newStudentship = ref<StudentshipDto>({ 
   ...props.studentship,
-  startDate: new Date(props.studentship.startDate),
-  endDate: new Date(props.studentship.endDate),
+  startDate: new Date(props.studentship.startDate!),
+  endDate: new Date(props.studentship.endDate!)
 })
 
 const submitForm = async () => {
-  const { valid } = await form.value.validate()
+  const { valid } = await form.value!.validate()
   if (valid) {
     saveStudentship()
     dialog.value = false;
@@ -104,12 +117,13 @@ const saveStudentship = async () => {
 }
 
 const startDateRules = [
-  (date: string) => new Date(date) ? true : 'Data de início é obrigatória.'
+  (date: string) => date ? true : 'Data de início é obrigatória.'
 ];
 
 const endDateRules = [
-  (date: string) =>  new Date(date) ? true : 'Data de fim é obrigatória.',
-  (date: string) => new Date(date) > newStudentship.value.startDate ? true : new Date(date) + 'Data de Fim tem de ser depois da Data de Início.' + newStudentship.value.startDate,
+  (date: string) => date ? true : 'Data de fim é obrigatória.',
+  // Note: startDate can actually be undefined, but then condition returns false
+  (date: string) => newStudentship.value.endDate! > newStudentship.value.startDate! ? true : 'Data de Fim tem de ser depois da Data de Início.',
 ];
 
 const payRules = [

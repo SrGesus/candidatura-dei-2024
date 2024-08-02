@@ -16,6 +16,8 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import '@mdi/font/css/materialdesignicons.css'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
+import { en, pt } from 'vuetify/locale'
+
 const app = createApp(App)
 
 const pinia = createPinia()
@@ -33,6 +35,11 @@ const vuetify = createVuetify({
   },
   components,
   directives,
+  locale: {
+    locale: 'pt',
+    fallback: 'en',
+    messages: { pt, en }
+  },
   theme: {
     defaultTheme: 'light',
     themes: {

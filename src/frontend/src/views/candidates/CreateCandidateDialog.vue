@@ -63,18 +63,21 @@
 
 <script setup lang="ts">
 import { VNumberInput } from 'vuetify/labs/VNumberInput'
+import { VForm } from 'vuetify/lib/components/index.mjs';
 
 import { ref } from 'vue'
+import type { Ref } from 'vue'
 import type CandidateDto from '@/models/candidates/CandidateDto'
 import RemoteService from '@/services/RemoteService'
 
 const dialog = ref(false)
-const form = ref(null)
+const form: Ref<null | VForm> = ref(null)
+
 
 const emit = defineEmits(['candidate-created'])
 
 const submitForm = async () => {
-  const { valid } = await form.value.validate()
+  const { valid } = await form.value!.validate()
   if (valid) {
     saveCandidate()
     dialog.value = false;
@@ -99,27 +102,27 @@ const saveCandidate = async () => {
 }
 
 const nameRules = [
-  name => {
+  (name: string) => {
     return name ? true : 'Nome é obrigatório.'
   },
 ];
 
 const istIdRules = [
-  istId => {
+  (istId: number) => {
     return istId > 0 ? true : 'IST ID é obrigatório.'
   },
-  istId => {
+  (istId: number) => {
     return  Number.isInteger(istId) ? true : 'IST ID têm de ser um inteiro.'
   },
-  async istId => {
+  async (istId: number) => {
     return await RemoteService.getCandidate(istId) ? 'Candidato com este IST ID já foi registado.' : true
   }
 ];
 
 const emailRules = [
-  email => {
+  (email: string) => {
     // Regex doesn't cover all cases but is a sensible approximation
-    return /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+    return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
       .test(email) ? true : 'E-Mail inválido.'
   },
 ];

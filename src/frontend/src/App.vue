@@ -15,5 +15,6 @@
 <script setup lang="ts">
 import TopBar from '@/components/TopBar.vue'
 
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
+
 </script>

@@ -24,30 +24,45 @@
     :custom-filter="fuzzySearch"
     class="text-left"
   >
-    <template v-slot:[`item.actions`]="{ item }">
-      <EditStudentshipDialog :studentship="item" @studentship-edited="getStudentships" />
-      <v-icon @click="deleteStudentship(item)">mdi-delete</v-icon>
-    </template>
+  <template v-slot:item="{ item }">
+    <tr class="clickable-rows" @click="rowClick(item)">
+        <td>{{ item.id }}</td>
+        <td>{{ item.startDate }}</td>
+        <td>{{ item.endDate }}</td>
+        <td>{{ item.pay }}</td>
+        <td>{{ item.vacancies }}</td>
+        <td>
+          <EditStudentshipDialog style="cursor: pointer;" :studentship="item" @studentship-edited="getStudentships" />
+          <v-icon @click="deleteStudentship(item)">mdi-delete</v-icon>
+        </td>
+      </tr>
+  </template>
+  
   </v-data-table>
 </template>
 
 <script setup lang="ts">
+const rowClick = (obj) => {
+  console.log(obj)
+  router.push({ name: 'studentship', params: { id: obj.id } })
+}
 import CreateStudentshipDialog from '@/views/studentships/CreateStudentshipDialog.vue'
+import EditStudentshipDialog from '@/views/studentships/EditStudentshipDialog.vue'
 import { ref } from 'vue'
 import RemoteService from '@/services/RemoteService'
 
 import { reactive } from 'vue'
 import type StudentshipDto from '@/models/studentships/StudentshipDto'
-import EditStudentshipDialog from '@/views/studentships/EditStudentshipDialog.vue'
+import router from '@/router';
 
 const search = ref('')
 const headers = [
-  { title: 'ID', value: 'id', key: 'id' },
+  { title: 'ID', value: 'id', key: 'id'},
   { title: 'Data de Início', value: 'startDate', key: 'startDate' },
   { title: 'Data de Fim', value: 'endDate', key: 'endDate' },
   { title: 'Valor Mensal (€)', value: 'pay', key: 'pay' },
   { title: 'Vagas', value: 'vacancies', key: 'vacancies' },
-  { title: 'Actions', value: 'actions', key: 'actions' }
+  { title: 'Actions', value: 'actions', key: 'actions' },
 ]
 
 const studentships: StudentshipDto[] = reactive([])
