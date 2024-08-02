@@ -17,16 +17,26 @@
           
           <v-date-input
             label="Data de Início*" 
-            required 
+            required
+            readonly
             v-model="newStudentship.startDate"
             :rules="startDateRules"
+            prepend-icon=""
+            prepend-inner-icon="$calendar"
+            placeholder="dd/mm/yyyy"
+            min="2020-01-01"
           ></v-date-input>
           
           <v-date-input
             label="Data de Fim*" 
-            required 
+            required
+            readonly
             v-model="newStudentship.endDate"
             :rules="endDateRules"
+            prepend-icon=""
+            prepend-inner-icon="$calendar"
+            placeholder="dd/mm/yyyy"
+            min="2020-01-01"
           ></v-date-input>
 
           <v-number-input
@@ -56,8 +66,8 @@
 
           <v-btn
             type="submit"
-            color="primary"
             text="Save"
+            color="primary"
             variant="tonal"
           ></v-btn>
         </v-card-actions>
@@ -70,49 +80,46 @@
 <script setup lang="ts">
 import { VNumberInput } from 'vuetify/labs/VNumberInput'
 import { VDateInput } from 'vuetify/labs/VDateInput'
+import { VForm } from 'vuetify/lib/components/index.mjs'
 import { ref } from 'vue'
+import type { Ref } from 'vue'
+
 import type StudentshipDto from '@/models/studentships/StudentshipDto'
 import RemoteService from '@/services/RemoteService'
+import { useDate } from 'vuetify/lib/framework.mjs'
 
 const dialog = ref(false)
-const form = ref(null)
+const form: Ref<null | VForm> = ref(null)
+const newStudentship = ref<StudentshipDto>({})
 
 const emit = defineEmits(['studentship-created'])
 
+const adapter = useDate();
+
 const submitForm = async () => {
-  const { valid } = await form.value.validate()
+  const { valid } = await form.value!.validate()
   if (valid) {
     saveStudentship()
     dialog.value = false;
   }
 }
 
-const newStudentship = ref<StudentshipDto>({
-  startDate: new Date(),
-  endDate: new Date(),
-  pay: 0,
-  vacancies: 0
-})
-
 const saveStudentship = async () => {
   console.log(newStudentship.value)
-  await RemoteService.createStudentship(newStudentship.value)
-  newStudentship.value = {
-    startDate: new Date(),
-    endDate: new Date(),
-    pay: 0,
-    vacancies: 0
-  }
-  emit('studentship-created')
+  RemoteService.createStudentship(newStudentship.value).then(() => {
+    newStudentship.value = {    }
+    emit('studentship-created')
+  })
 }
 
 const startDateRules = [
-  (date: string) => new Date(date) ? true : 'Data de início é obrigatória.'
+  (date: string) => date ? true : 'Data de início é obrigatória.'
 ];
 
 const endDateRules = [
-  (date: string) =>  new Date(date) ? true : 'Data de fim é obrigatória.',
-  (date: string) => new Date(date) > newStudentship.value.startDate ? true : 'Data de Fim tem de ser depois da Data de Início.',
+  (date: string) => date ? true : 'Data de fim é obrigatória.',
+  // Note: startDate can actually be undefined, but condition will return false
+  () => newStudentship.value.endDate! > newStudentship.value.startDate! ? true : 'Data de Fim tem de ser posterior a Data de Início.',
 ];
 
 const payRules = [

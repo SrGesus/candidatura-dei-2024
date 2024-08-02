@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import MaterialView from '@/views/materials/MaterialView.vue'
 import CandidateView from '@/views/candidates/CandidateView.vue'
 import StudentshipView from '@/views/studentships/StudentshipView.vue'
+import StudentshipCandidates from '@/views/enrollments/StudentshipCandidates.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,7 +47,13 @@ const router = createRouter({
       path: '/studentships',
       name: 'studentships',
       component: StudentshipView
-    }
+    },
+    {
+      path: '/studentships/:id',
+      name: 'studentship',
+      component: StudentshipCandidates,
+      props: route => ({ id: Number(route.params.id) })
+    },
   ]
 })
 

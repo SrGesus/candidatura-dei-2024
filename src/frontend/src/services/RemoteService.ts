@@ -28,7 +28,7 @@ export default class RemoteService {
         return null
       }
     })
-    .catch((error) => {
+    .catch(() => {
       return null
     })
   }
@@ -66,7 +66,7 @@ export default class RemoteService {
         return null
       }
     })
-    .catch((error) => {
+    .catch(() => {
       return null
     })
   }

@@ -54,16 +54,18 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { Ref } from 'vue'
 import type MaterialDto from '@/models/materials/MaterialDto'
 import RemoteService from '@/services/RemoteService'
+import { VForm } from 'vuetify/lib/components/index.mjs';
 
 const dialog = ref(false)
-const form = ref(null)
+const form: Ref<null | VForm> = ref(null)
 
 const emit = defineEmits(['material-created'])
 
 const submitForm = async () => {
-  const { valid } = await form.value.validate()
+  const { valid } = await form.value!.validate()
   if (valid) {
     saveMaterial()
     dialog.value = false;
@@ -93,7 +95,7 @@ const saveMaterial = async () => {
 }
 
 const nameRules = [
-  name => {
+  (name: string) => {
     return name ? true : 'Nome é obrigatório.'
   },
 ];
@@ -102,7 +104,7 @@ const types = ['Chave', 'Cacifo', 'Genérico'];
 
 // FIXME wrong rule
 const typeRules = [
-  type => {
+  (type: string) => {
     return type ? true : 'Tipo é obrigatório.'
   },
 ];

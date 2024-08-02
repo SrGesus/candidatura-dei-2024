@@ -21,6 +21,15 @@ a,
   }
 }
 
+.clickable-rows:hover td {
+  background-color: hsla(172, 9%, 50%, 0.2);
+}
+
+/* .v-data-table-header__content {
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+} */
 
 body {
   min-height: 100vh;
