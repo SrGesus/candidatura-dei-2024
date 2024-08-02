@@ -1,10 +1,17 @@
 <template>
-  <v-row align="center">
+  <v-row align="center" class="mb-2">
     <v-col>
       <h2 class="text-left ml-1">Listagem de Candidatos</h2>
     </v-col>
     <v-col cols="auto">
-      <CreateCandidateDialog @candidate-created="getCandidates" />
+      <CandidateDialog :edit="false" @candidate-saved="getCandidates">
+          <v-btn
+            class="text-none font-weight-regular"
+            prepend-icon="mdi-plus"
+            text="Adicionar Candidato"
+            color="primary"
+          ></v-btn>
+      </CandidateDialog>  
     </v-col>
   </v-row>
 
@@ -25,20 +32,23 @@
     class="text-left"
   >
     <template v-slot:[`item.actions`]="{ item }">
-      <EditCandidateDialog :candidate="item" @candidate-edited="getCandidates" />
-      <v-icon @click="deleteCandidate(item)">mdi-delete</v-icon>
+      <v-row>
+        <CandidateDialog :edit="item" @candidate-saved="getCandidates">
+          <v-icon class="mr-2">mdi-pencil</v-icon>
+        </CandidateDialog>
+        <v-icon @click="deleteCandidate(item)">mdi-delete</v-icon>
+      </v-row>
     </template>
   </v-data-table>
 </template>
 
 <script setup lang="ts">
-import CreateCandidateDialog from '@/views/candidates/CreateCandidateDialog.vue'
 import { ref } from 'vue'
 import RemoteService from '@/services/RemoteService'
 
 import { reactive } from 'vue'
 import type CandidateDto from '@/models/candidates/CandidateDto'
-import EditCandidateDialog from '@/views/candidates/EditCandidateDialog.vue'
+import CandidateDialog from './CandidateDialog.vue'
 
 const search = ref('')
 const headers = [
