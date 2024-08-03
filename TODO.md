@@ -19,10 +19,10 @@ Tabelas:
 - [x] Atualizar e remover candidatos existentes;
 
 ### Bolsas:
-- [ ] Visualizar todas as bolsas numa tabela de consulta rápida, contendo pelo menos ID, data de início e data de fim;
-- [ ] Visualizar uma bolsa em particular numa página dedicada, contendo pelo menos data de início, data de fim, valor mensal e candidatos inscritos;
-- [ ] Adicionar novas bolsas;
-- [ ] Atualizar e remover bolsas existentes;
+- [x] Visualizar todas as bolsas numa tabela de consulta rápida, contendo pelo menos ID, data de início e data de fim;
+- [x] Visualizar uma bolsa em particular numa página dedicada, contendo pelo menos data de início, data de fim, valor mensal e candidatos inscritos;
+- [x] Adicionar novas bolsas;
+- [x] Atualizar e remover bolsas existentes;
 - [ ] Dentro de uma bolsa, permitir mudar o peso de cada categoria de avaliação;
 
 ### Inscrições:
