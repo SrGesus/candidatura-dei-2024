@@ -1,4 +1,5 @@
 export default class CandidateDto {
+  selected?: boolean
   istId?: number
   name?: string
   email?: string

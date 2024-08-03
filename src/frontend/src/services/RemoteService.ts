@@ -3,6 +3,9 @@ import axios from 'axios'
 import MaterialDto from '@/models/materials/MaterialDto'
 import CandidateDto from '@/models/candidates/CandidateDto'
 import StudentshipDto from '@/models/studentships/StudentshipDto'
+import EnrollmentDto from '@/models/enrollments/EnrollmentDto'
+import EnrollmentId from '@/models/enrollments/EnrollmentId'
+import GradeParameterDto from '@/models/grades/GradeParameterDto'
 
 const httpClient = axios.create()
 httpClient.defaults.timeout = 10000
@@ -10,6 +13,66 @@ httpClient.defaults.baseURL = import.meta.env.VITE_ROOT_API
 httpClient.defaults.headers.post['Content-Type'] = 'application/json'
 
 export default class RemoteService {
+
+  // ---------------- Grades Parameters---------------
+  static async getGradeParameters(studentshipId: number): Promise<GradeParameterDto[]> {
+    return httpClient.get(`/grades/studentship/${studentshipId}`).then((response) => {
+      return response.data.map((gradeParameter: any) => {
+        return new GradeParameterDto(gradeParameter)
+      })
+    });
+  }
+  
+  static async createGradeParameter(gradeParameter: GradeParameterDto): Promise<GradeParameterDto> {
+    return httpClient.post('/grades/create', gradeParameter).then((response) => {
+      return new GradeParameterDto(response.data)
+    })
+  }
+
+  static async updateGradeParameter(gradeParameter: GradeParameterDto): Promise<GradeParameterDto> {
+    return httpClient.put('/grades/update', gradeParameter).then((response) => {
+      return new GradeParameterDto(response.data)
+    })
+  }
+
+  static async deleteGradeParameter(gradeParameter: GradeParameterDto): Promise<void> {
+    return httpClient.delete(`/grades/delete/${gradeParameter.id}`)
+  }
+  
+  // ------------------ Enrollments ------------------
+  static async getEnrollments(): Promise<EnrollmentDto[]> {
+    return httpClient.get('/enrollments/all').then((response) => {
+      return response.data.map((enrollment: any) => {
+        return new EnrollmentDto(enrollment)
+      })
+    })
+  }
+
+  static async getStudentshipEnrollments(id: number): Promise<EnrollmentDto[]> {
+    return httpClient.get(`/enrollments/studentship/${id}`).then((response) => {
+      return response.data.map((enrollment: any) => {
+        return new EnrollmentDto(enrollment)
+      })
+    })
+  }
+
+  static async getCandidateEnrollments(istId: number): Promise<EnrollmentDto[]> {
+    return httpClient.get(`/enrollments/candidate/${istId}`).then((response) => {
+      return response.data.map((enrollment: any) => {
+        return new EnrollmentDto(enrollment)
+      })
+    })
+  }
+
+  static async createEnrollment(enrollmentId: EnrollmentId): Promise<EnrollmentDto> {
+    return httpClient.post('/enrollments/create', enrollmentId).then((response) => {
+      return new EnrollmentDto(response.data)
+    })
+  }
+
+  static async deleteEnrollment(candidateIstId: number, studentshipId: number): Promise<void> {
+    return httpClient.delete(`/enrollments/delete/${candidateIstId}/${studentshipId}`)
+  }
 
   // ------------------ Studentship ------------------
   static async getStudentships(): Promise<StudentshipDto[]> {
@@ -20,8 +83,8 @@ export default class RemoteService {
     })
   }
 
-  static async getStudentship(istId: number): Promise<StudentshipDto | null> {
-    return httpClient.get(`/studentships/get/${istId}`).then((response) => {
+  static async getStudentship(id: number): Promise<StudentshipDto | null> {
+    return httpClient.get(`/studentships/get/${id}`).then((response) => {
       if (response.data) {
         return new StudentshipDto(response.data)
       } else {

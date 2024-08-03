@@ -25,7 +25,7 @@ public class StudentshipController {
                 produces = "application/json; charset=utf-8")
     public StudentshipDto getStudentship(@PathVariable Long id) {
         return studentshipService.getStudentship(id).orElseThrow(
-            NotFoundException::new
+            () -> new NotFoundException("Studentship with id " + id + " not found")
         );
     }
 

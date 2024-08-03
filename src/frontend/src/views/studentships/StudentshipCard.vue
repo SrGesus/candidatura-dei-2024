@@ -24,7 +24,7 @@
         class="text-none font-weight-regular"
         prepend-icon="mdi-sync"
         text="Repor Valores"
-        color="primary"
+        color="green"
         variant="tonal"
         @click="getStudentship()"
       ></v-btn>
@@ -33,7 +33,7 @@
         prepend-icon="mdi-content-save"
         text="Guardar"
         color="primary"
-        variant="tonal"
+        @click="submitForm()"
       ></v-btn>
     </v-col>
   </v-row>
@@ -89,7 +89,6 @@
         v-model.number="newStudentship.vacancies"
         :rules="vacanciesRules"
       ></v-number-input>
-      <v-divider></v-divider>
   </v-form>
   </v-col>
 </template>

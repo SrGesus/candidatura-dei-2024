@@ -1,6 +1,6 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.dto.StudentshipDto;
@@ -14,10 +14,10 @@ public class Studentship {
     private Long id;
 
     @Temporal(TemporalType.DATE)
-    private Date startDate;
+    private LocalDate startDate;
 
     @Temporal(TemporalType.DATE)
-    private Date endDate;
+    private LocalDate endDate;
 
     private Float pay;
 
@@ -27,7 +27,7 @@ public class Studentship {
 
     }
 
-    public Studentship(Date startDate, Date endDate, Float pay, Integer vacancies) {
+    public Studentship(LocalDate startDate, LocalDate endDate, Float pay, Integer vacancies) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.pay = pay;
@@ -45,11 +45,11 @@ public class Studentship {
         return id;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
@@ -61,11 +61,11 @@ public class Studentship {
         return vacancies;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 

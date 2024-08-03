@@ -23,9 +23,9 @@ public class CandidateController {
 
     @GetMapping(value = "/get/{id}",
                 produces = "application/json; charset=utf-8")
-    public CandidateDto getCandidate(@PathVariable Long id) {
-        return candidateService.getCandidate(id).orElseThrow(
-            NotFoundException::new
+    public CandidateDto getCandidate(@PathVariable Long istId) {
+        return candidateService.getCandidate(istId).orElseThrow(
+            () -> new NotFoundException("Candidate with istId " + istId + " not found")
         );
     }
 
@@ -39,9 +39,9 @@ public class CandidateController {
         return candidateService.updateCandidate(candidateDto);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public List<CandidateDto> deleteCandidate(@PathVariable Long id) {
-        return candidateService.deleteCandidate(id);
+    @DeleteMapping("/delete/{istId}")
+    public List<CandidateDto> deleteCandidate(@PathVariable Long istId) {
+        return candidateService.deleteCandidate(istId);
     }
 
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.repository.CandidateRepository;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.BadRequestException;
 
 
 @Service
@@ -20,7 +21,7 @@ public class CandidateService {
     
     public CandidateDto createCandidate(CandidateDto candidateDto) {
         if (!candidateRepository.findById(candidateDto.getIstId()).isEmpty())
-            throw new IllegalArgumentException("Candidate with istId " + candidateDto.getIstId() + " already exists");
+            throw new BadRequestException("Candidate with istId " + candidateDto.getIstId() + " already exists");
         Candidate candidate = new Candidate(candidateDto);
         candidateRepository.save(candidate);
         return new CandidateDto(candidate);
@@ -44,8 +45,8 @@ public class CandidateService {
         return getCandidates();
     }
 
-    public List<CandidateDto> deleteCandidate(Long id) {
-        candidateRepository.deleteById(id);
+    public List<CandidateDto> deleteCandidate(Long istId) {
+        candidateRepository.deleteById(istId);
         // TODO: Not used Consider returning void
         return getCandidates();
     }

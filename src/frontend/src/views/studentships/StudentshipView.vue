@@ -36,8 +36,8 @@
       <td>{{ item.id }}</td>
       <td>{{ item.startDate }}</td>
       <td>{{ item.endDate }}</td>
-      <td>{{ item.pay }}</td>
-      <td>{{ item.vacancies }}</td>
+      <td>{{ item.pay.toFixed(2) }} €</td>
+      <td><v-chip>{{ item.vacancies }}</v-chip></td>
       <td>
         <v-row>
           <StudentshipDialog :edit="item" :studentship="item" @studentship-saved="getStudentships">
@@ -73,7 +73,7 @@ const headers = [
   { title: 'Data de Fim', value: 'endDate', key: 'endDate' },
   { title: 'Valor Mensal (€)', value: 'pay', key: 'pay' },
   { title: 'Vagas', value: 'vacancies', key: 'vacancies' },
-  { title: 'Actions', value: 'actions', key: 'actions' },
+  { title: 'Ações', value: 'actions', key: 'actions' }
 ]
 
 const studentships: StudentshipDto[] = reactive([])
@@ -95,6 +95,7 @@ function deleteStudentship(studentship: StudentshipDto) {
 }
 
 const fuzzySearch = (value: string, search: string) => {
+  console.log(value, search)
   // Regex to match any character in between the search characters
   let searchRegex = new RegExp(search.split('').join('.*'), 'i')
   return searchRegex.test(value)

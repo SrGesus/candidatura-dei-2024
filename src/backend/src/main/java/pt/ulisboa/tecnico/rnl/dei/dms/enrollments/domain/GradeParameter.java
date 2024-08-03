@@ -10,11 +10,59 @@ public class GradeParameter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @Column(nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "studentship_id", nullable = false)
+    @Column(nullable = false)
+    private Float weight;
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     private Studentship studentship;
 
+    public GradeParameter() {
+    }
+
+    public GradeParameter(String name, Float weight, Studentship studentship) {
+        this.name = name;
+        this.weight = weight;
+        this.studentship = studentship;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Float getWeight() {
+        return weight;
+    }
+
+    public Studentship getStudentship() {
+        return studentship;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWeight(Float weight) {
+        this.weight = weight;
+    }
+
+    public void setStudentship(Studentship studentship) {
+        this.studentship = studentship;
+    }
+
+    @Override
+    public String toString() {
+        return "GradeParameter{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", studentship=" + studentship +
+                '}';
+    }
 }

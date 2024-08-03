@@ -45,11 +45,13 @@ public class EnrollmentService {
     }
 
     public EnrollmentDto createEnrollment(EnrollmentId enrollmentId) {
-        Candidate candidate = candidateRepository.findById(enrollmentId.getCandidateId()).orElseThrow(
-            NotFoundException::new
+        Candidate candidate = candidateRepository.findById(enrollmentId.getCandidateIstId()).orElseThrow(
+            () ->
+            new NotFoundException("Candidate with istId " + enrollmentId.getCandidateIstId() + " not found")
         );
         Studentship studentship = studentshipRepository.findById(enrollmentId.getStudentshipId()).orElseThrow(
-            NotFoundException::new
+            () ->
+            new NotFoundException("Studentship with id " + enrollmentId.getStudentshipId() + " not found")
         );
         Enrollment enrollment = new Enrollment(candidate, studentship);
         enrollmentRepository.save(enrollment);
@@ -58,6 +60,7 @@ public class EnrollmentService {
 
     public List<EnrollmentDto> deleteEnrollment(EnrollmentId enrollmentId) {
         enrollmentRepository.deleteById(enrollmentId);
+        // TODO: Not used Consider returning void
         return getEnrollments();
     }
 }

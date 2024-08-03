@@ -3,16 +3,6 @@
     <v-col>
       <h2 class="text-left ml-1">Listagem de Candidatos</h2>
     </v-col>
-    <v-col cols="auto">
-      <CandidateDialog :edit="false" @candidate-saved="getCandidates">
-        <v-btn
-          class="text-none font-weight-regular"
-          prepend-icon="mdi-plus"
-          text="Adicionar Candidato"
-          color="primary"
-        ></v-btn>
-      </CandidateDialog>  
-    </v-col>
   </v-row>
 
   <v-text-field
@@ -48,15 +38,20 @@ import RemoteService from '@/services/RemoteService'
 
 import { reactive } from 'vue'
 import type CandidateDto from '@/models/candidates/CandidateDto'
-import CandidateDialog from './CandidateDialog.vue'
+import CandidateDialog from '@/views/candidates/CandidateDialog.vue'
 
 const search = ref('')
 const headers = [
+  { title: 'Selecionado', value: 'selected', key: 'selected' },
   { title: 'IST ID', value: 'istId', key: 'istId' },
   { title: 'Name', value: 'name', key: 'name ' },
   { title: 'E-Mail', value: 'email', key: 'email' },
   { title: 'Ações', value: 'actions', key: 'actions' }
 ]
+
+const props = defineProps<{
+  // id: number;
+}>();
 
 const candidates: CandidateDto[] = reactive([])
 

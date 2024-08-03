@@ -7,29 +7,28 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class EnrollmentId implements Serializable {
 
-    private Long candidateId;
+    private Long candidateIstId;
     
     private Long studentshipId;
-
 
     public EnrollmentId() {
     }
 
     public EnrollmentId(Long candidateId, Long studentshipId) {
-        this.candidateId = candidateId;
+        this.candidateIstId = candidateId;
         this.studentshipId = studentshipId;
     }
 
-    public Long getCandidateId() {
-        return candidateId;
+    public Long getCandidateIstId() {
+        return candidateIstId;
     }
 
     public Long getStudentshipId() {
         return studentshipId;
     }
 
-    public void setCandidateId(Long candidateId) {
-        this.candidateId = candidateId;
+    public void setCandidateIstId(Long candidateId) {
+        this.candidateIstId = candidateId;
     }
 
     public void setStudentshipId(Long studentshipId) {
@@ -39,7 +38,7 @@ public class EnrollmentId implements Serializable {
     @Override
     public String toString() {
         return "EnrollmentKeyDto{" +
-                "candidateId=" + candidateId +
+                "candidateIstId=" + candidateIstId +
                 ", studentshipId=" + studentshipId +
                 '}';
     }
@@ -47,10 +46,10 @@ public class EnrollmentId implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o instanceof EnrollmentId enrollmentId)
-            return candidateId.equals(enrollmentId.candidateId) 
+            return candidateIstId.equals(enrollmentId.candidateIstId) 
                 && studentshipId.equals(enrollmentId.studentshipId);
         else if (o instanceof Enrollment enrollment)
-            return candidateId.equals(enrollment.getCandidate().getIstId()) 
+            return candidateIstId.equals(enrollment.getCandidate().getIstId()) 
                 && studentshipId.equals(enrollment.getStudentship().getId());
         else
             return false;
@@ -59,6 +58,6 @@ public class EnrollmentId implements Serializable {
     @Override
     public int hashCode() {
         // Good enough
-        return candidateId.hashCode() + studentshipId.hashCode();
+        return candidateIstId.hashCode() + studentshipId.hashCode();
     }
 }

@@ -1,20 +1,21 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.studentships.dto;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain.Studentship;
 
 public class StudentshipDto {
     private Long id;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private Float pay;
     private Integer vacancies;
 
     public StudentshipDto() {
     }
 
-    public StudentshipDto(Date startDate, Date endDate, Float pay, Integer vacancies) {
+    public StudentshipDto(LocalDate startDate, LocalDate endDate, Float pay, Integer vacancies) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.pay = pay;
@@ -33,11 +34,11 @@ public class StudentshipDto {
         return id;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
@@ -49,11 +50,11 @@ public class StudentshipDto {
         return vacancies;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 

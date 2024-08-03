@@ -21,25 +21,28 @@ public class EnrollmentController {
         return enrollmentService.getEnrollments();
     }
 
+    // TODO: Make this receive a query parameter instead of two different endpoints
     @GetMapping(value = "/candidate/{candidateId}",
                 produces = "application/json; charset=utf-8")
     public List<EnrollmentDto> getCandidateEnrollments(@PathVariable Long candidateId) {
         return enrollmentService.getCandidateEnrollments(candidateId);
     }
 
+    // TODO: Make this receive a query parameter instead of two different endpoints
     @GetMapping(value = "/studentship/{studentshipId}",
                 produces = "application/json; charset=utf-8")
     public List<EnrollmentDto> getStudentshipEnrollments(@PathVariable Long studentshipId) {
         return enrollmentService.getStudentshipEnrollments(studentshipId);
     }
 
+    // TODO: Allow for multiple enrollments to be created at once
     @PostMapping(value = "/create")
     public EnrollmentDto createEnrollment(@RequestBody EnrollmentId enrollmentId) {
         return enrollmentService.createEnrollment(enrollmentId);
     }
 
-    @DeleteMapping(value = "/delete")
-    public List<EnrollmentDto> deleteEnrollment(@RequestBody EnrollmentId enrollmentId) {
-        return enrollmentService.deleteEnrollment(enrollmentId);
+    @DeleteMapping(value = "/delete/{candidateId}/{studentshipId}")
+    public List<EnrollmentDto> deleteEnrollment(@PathVariable Long candidateId, @PathVariable Long studentshipId) {
+        return enrollmentService.deleteEnrollment(new EnrollmentId(candidateId, studentshipId));
     }
 }

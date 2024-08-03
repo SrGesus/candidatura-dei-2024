@@ -75,5 +75,13 @@ const vuetify = createVuetify({
   }
 })
 
+const enrollHeaders: 
+  { title: string, key: string, value?: string, align?: string | undefined, children?: any[] }[] = [
+  { title: 'IST ID', key: 'candidateId', value: 'candidate.istId', align: undefined },
+  { title: 'Nome', key: 'name', value: 'candidate.name', align: undefined },
+  { title: 'Ações', key: 'actions', value: 'actions', align: undefined },
+  { title: 'Avaliação', key: 'evaluation', align: 'center'},
+];
+
 app.use(vuetify)
 app.mount('#app')
