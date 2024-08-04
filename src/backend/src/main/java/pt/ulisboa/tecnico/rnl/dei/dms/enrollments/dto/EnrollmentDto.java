@@ -13,7 +13,7 @@ public class EnrollmentDto {
 
     private CandidateDto candidate;
     private StudentshipDto studentship;
-    private Map<Long, Double> grades;
+    private Map<Long, Float> grades;
 
     public EnrollmentDto() {
     }
@@ -34,7 +34,7 @@ public class EnrollmentDto {
         return studentship;
     }
 
-    public Map<Long, Double> getGrades() {
+    public Map<Long, Float> getGrades() {
         return grades;
     }
 

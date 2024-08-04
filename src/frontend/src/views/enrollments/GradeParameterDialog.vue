@@ -13,12 +13,13 @@
   <v-form ref="form" @submit.prevent="submitForm()">
 
     <v-card-text>
-      <v-row class="text-center align-center" v-for="parameter in parameters.concat(newParameters)" :key="parameter.id">
+      <v-row class="text-center align-center" v-for="parameter in parameters.concat(newParameters).filter((v) => v.change !== 'delete')" :key="parameter.id">
         <v-col>
           <v-text-field
             v-model="parameter.name"
             label="Nome"
             required
+            :rules="nameRules"
             hide-details="auto"
           ></v-text-field>
         </v-col>
@@ -27,6 +28,7 @@
             v-model.number="parameter.weight"
             label="Peso"
             required
+            :rules="weightRules"
             hide-details="auto"
             control-variant="stacked"
             :step="0.5"
@@ -57,11 +59,10 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-
       <v-btn 
         text="Cancelar" 
         variant="plain" 
-        @click="dialog = false"
+        @click="dialog = false; getParameters()"
       ></v-btn>
       <v-btn
         type="submit"
@@ -90,21 +91,20 @@ const dialog = ref(false)
 const form: Ref<null | VForm> = ref(null)
 const emit = defineEmits(['parameters-saved'])
 
+
 const props = defineProps<{
   studentshipId: number;
 }>();
 
-const deleteParameter = (parameter: GradeParameterDto) => {
+const deleteParameter = (parameter: GradeParameterDto & {change?: 'update' | 'delete'}) => {
   if (parameter.id) {
-    RemoteService.deleteGradeParameter(parameter).then(() => {
-      getParameters()
-    });
+    parameter.change = 'delete'
   } else {
     newParameters.value.splice(newParameters.value.indexOf(parameter), 1)
   }
 }
 
-const parameters: Ref<GradeParameterDto[]> = ref([]);
+const parameters: Ref<(GradeParameterDto & {change?: 'update' | 'delete'})[]> = ref([]);
 const newParameters: Ref<GradeParameterDto[]> = ref([]);
 
 
@@ -119,17 +119,15 @@ const submitForm = () => {
 
 const saveParameters = async () => {
   for (let parameter of parameters.value) {
-    await RemoteService.updateGradeParameter(parameter).catch((error) => {
-      // Catch the error to ensure reactive components are updated
-      console.error(error)
-    });
+    if (parameter.change === 'update') {
+      await RemoteService.updateGradeParameter(parameter);
+    } else if (parameter.change === 'delete') {
+      await RemoteService.deleteGradeParameter(parameter);
+    }
   }
   for (let parameter of newParameters.value) {
     parameter.studentshipId = props.studentshipId;
-    await RemoteService.createGradeParameter(parameter).catch((error) => {
-      // Catch the error to ensure reactive components are updated
-      console.error(error)
-    });
+    await RemoteService.createGradeParameter(parameter);
   }
   newParameters.value.splice(0, newParameters.value.length);
   getParameters()
@@ -139,11 +137,20 @@ const saveParameters = async () => {
 getParameters();
 async function getParameters() {
   parameters.value.splice(0, parameters.value.length)
+  newParameters.value.splice(0, newParameters.value.length);
   RemoteService.getGradeParameters(props.studentshipId).then((data) => {
     data.forEach((parameter) => {
       parameters.value.push(parameter)
     })
   });
 }
+
+const nameRules = [
+  (v: string) => v ? true : 'Nome é obrigatório.',
+]
+
+const weightRules = [
+  (v: number) => v > 0 ? true : 'Peso deve ser maior que 0.',
+];
 
 </script>

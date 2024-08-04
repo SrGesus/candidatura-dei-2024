@@ -80,7 +80,12 @@ public class GradeService {
             new NotFoundException("Grade parameter with id " + gradeDto.getGradeParameterId() + " not found")
         );
         Grade grade = new Grade(gradeParameter, enrollment, gradeDto.getGrade());
-        gradeRepository.save(grade);
-        return new GradeDto(grade);
+        if (gradeDto.getGrade() == null) {
+            gradeRepository.delete(grade);
+            return null;
+        } else {
+            gradeRepository.save(grade);
+            return new GradeDto(grade);
+        }
     }
 }

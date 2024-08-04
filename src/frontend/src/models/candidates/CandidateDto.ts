@@ -7,4 +7,13 @@ export default class CandidateDto {
   constructor(jsonObj: Partial<CandidateDto>) {
     Object.assign(this, jsonObj)
   }
+
+  static default(): CandidateDto {
+    return new CandidateDto({
+      selected: false,
+      istId: 0,
+      name: '',
+      email: ''
+    })
+  }
 }

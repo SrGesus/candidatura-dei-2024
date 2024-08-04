@@ -1,5 +1,8 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -10,20 +13,22 @@ public class Grade {
     private GradeId gradeId;
 
     @MapsId("gradeParameterId")
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private GradeParameter gradeParameter;
 
     @MapsId("enrollmentId")
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Enrollment enrollment;
 
     @Column(nullable = false)
-    private Double grade;
+    private Float grade;
 
     public Grade() {
     }
 
-    public Grade(GradeParameter gradeParameter, Enrollment enrollment, Double grade) {
+    public Grade(GradeParameter gradeParameter, Enrollment enrollment, Float grade) {
         if (gradeParameter.getStudentship().getId() != enrollment.getStudentship().getId()) {
             throw new IllegalArgumentException("Grade parameter and enrollment must be from the same studentship");
         }
@@ -42,7 +47,7 @@ public class Grade {
         return enrollment;
     }
 
-    public Double getGrade() {
+    public Float getGrade() {
         return grade;
     }
 
@@ -54,7 +59,7 @@ public class Grade {
         this.enrollment = enrollment;
     }
 
-    public void setGrade(Double grade) {
+    public void setGrade(Float grade) {
         this.grade = grade;
     }
 

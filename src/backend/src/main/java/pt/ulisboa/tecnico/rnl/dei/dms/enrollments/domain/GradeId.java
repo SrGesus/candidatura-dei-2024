@@ -5,6 +5,7 @@ import jakarta.persistence.Embedded;
 
 @Embeddable
 public class GradeId {
+    
     private Long gradeParameterId;
     
     @Embedded

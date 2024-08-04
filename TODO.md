@@ -5,7 +5,7 @@ Tabelas:
   - ist_id
   - nome
   - e-mail
-- [ ] bolsas do DEI, guardando, para cada uma, pelo menos o ID, a data de início, a data de fim, valor mensal, candidatos e outros campos que considere relevantes;
+- [x] bolsas do DEI, guardando, para cada uma, pelo menos o ID, a data de início, a data de fim, valor mensal, candidatos e outros campos que considere relevantes;
   - ID
   - data inicio
   - data fim
@@ -26,8 +26,12 @@ Tabelas:
 - [ ] Dentro de uma bolsa, permitir mudar o peso de cada categoria de avaliação;
 
 ### Inscrições:
-- [ ] Inscrever e desinscrever candidatos em bolsas existentes;
+- [x] Inscrever e desinscrever candidatos em bolsas existentes;
 - [ ] Visualizar todas as bolsas em que um candidato está inscrito;
-- [ ] Dentro de uma bolsa, permitir avaliar candidatos, guardando, para cada um, a nota atribuída a cada categoria de avaliação (por exemplo, "Avaliação curricular", "Entrevista", "Exercício prático");
-- [ ] Dentro de uma bolsa, permitir visualizar a média final de cada candidato, calculada com base nas notas atribuídas e nos pesos das categorias de avaliação.
+- [x] Dentro de uma bolsa, permitir avaliar candidatos, guardando, para cada um, a nota atribuída a cada categoria de avaliação (por exemplo, "Avaliação curricular", "Entrevista", "Exercício prático");
+- [x] Dentro de uma bolsa, permitir visualizar a média final de cada candidato, calculada com base nas notas atribuídas e nos pesos das categorias de avaliação.
 - [ ] Dentro de uma bolsa, uma vez que as avaliações estejam concluídas, permitir selecionar o(s) candidato(s) vencedor(es) da bolsa.
+
+
+Color Scale:
+

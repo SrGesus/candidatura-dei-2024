@@ -8,6 +8,13 @@ export default class GradeParameterDto {
   constructor(jsonObj: Partial<GradeParameterDto>) {
     Object.assign(this, jsonObj)
   }
+
+  static default(): GradeParameterDto {
+    return new GradeParameterDto({
+      id: 0,
+      name: '',
+      weight: 0,
+      studentshipId: 0
+    })
+  }
 }
-    
-  

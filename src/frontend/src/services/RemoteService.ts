@@ -6,6 +6,7 @@ import StudentshipDto from '@/models/studentships/StudentshipDto'
 import EnrollmentDto from '@/models/enrollments/EnrollmentDto'
 import EnrollmentId from '@/models/enrollments/EnrollmentId'
 import GradeParameterDto from '@/models/grades/GradeParameterDto'
+import GradeDto from '@/models/grades/GradeDto'
 
 const httpClient = axios.create()
 httpClient.defaults.timeout = 10000
@@ -13,6 +14,13 @@ httpClient.defaults.baseURL = import.meta.env.VITE_ROOT_API
 httpClient.defaults.headers.post['Content-Type'] = 'application/json'
 
 export default class RemoteService {
+
+  // --------------------- Grades --------------------
+  static async gradeCandidate(grade: GradeDto): Promise<GradeDto> {
+    return httpClient.post('/grades/grade', grade).then((response) => {
+      return new GradeDto(response.data)
+    });
+  }
 
   // ---------------- Grades Parameters---------------
   static async getGradeParameters(studentshipId: number): Promise<GradeParameterDto[]> {
@@ -70,8 +78,8 @@ export default class RemoteService {
     })
   }
 
-  static async deleteEnrollment(candidateIstId: number, studentshipId: number): Promise<void> {
-    return httpClient.delete(`/enrollments/delete/${candidateIstId}/${studentshipId}`)
+  static async deleteEnrollment(enrollmentId: EnrollmentId): Promise<void> {
+    return httpClient.delete(`/enrollments/delete/${enrollmentId.candidateIstId}/${enrollmentId.studentshipId}`)
   }
 
   // ------------------ Studentship ------------------

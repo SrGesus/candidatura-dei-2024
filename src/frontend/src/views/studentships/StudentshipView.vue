@@ -34,8 +34,8 @@
   <template v-slot:item="{ item }">
     <tr class="clickable-rows" @click="rowClick(item)">
       <td>{{ item.id }}</td>
-      <td>{{ item.startDate }}</td>
-      <td>{{ item.endDate }}</td>
+      <td>{{ item.startDate.toLocaleDateString() }}</td>
+      <td>{{ item.endDate.toLocaleDateString() }}</td>
       <td>{{ item.pay.toFixed(2) }} €</td>
       <td><v-chip>{{ item.vacancies }}</v-chip></td>
       <td>

@@ -7,12 +7,12 @@ public class GradeDto {
     private Long gradeParameterId;
     private Long candidateIstId;
     private Long studentshipId;
-    private Double grade;
+    private Float grade;
 
     public GradeDto() {
     }
 
-    public GradeDto(Long gradeParameterId, Long candidateIstId, Long studentshipId, Double value) {
+    public GradeDto(Long gradeParameterId, Long candidateIstId, Long studentshipId, Float value) {
         this.gradeParameterId = gradeParameterId;
         this.candidateIstId = candidateIstId;
         this.studentshipId = studentshipId;
@@ -38,7 +38,7 @@ public class GradeDto {
         return studentshipId;
     }
 
-    public Double getGrade() {
+    public Float getGrade() {
         return grade;
     }
 
@@ -54,7 +54,7 @@ public class GradeDto {
         this.studentshipId = studentshipId;
     }
 
-    public void setGrade(Double grade) {
+    public void setGrade(Float grade) {
         this.grade = grade;
     }
 }

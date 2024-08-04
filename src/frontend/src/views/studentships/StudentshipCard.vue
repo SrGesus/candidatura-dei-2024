@@ -136,11 +136,12 @@ const submitForm = async () => {
     dialog.value = false;
   }
 }
-
+const emit = defineEmits(['studentship-saved'])
 const saveStudentship = async () => {
   console.log(newStudentship.value)
   await RemoteService.updateStudentship(newStudentship.value)
   getStudentship()
+  emit('studentship-saved')
 }
 
 const startDateRules = [

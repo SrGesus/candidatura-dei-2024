@@ -28,7 +28,7 @@ public class Enrollment {
     private Studentship studentship;
 
     // Map of every gradeparameter id to the grade
-    @OneToMany(mappedBy = "enrollment")
+    @OneToMany(mappedBy = "enrollment", cascade = CascadeType.ALL)
     private Set<Grade> grades;
 
     public Enrollment() {

@@ -4,29 +4,45 @@ import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.boot.CommandLineRunner;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.CandidateService;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.EnrollmentService;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.GradeService;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.EnrollmentId;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.GradeDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.GradeParameterDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.StudentshipService;
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.dto.StudentshipDto;
 
 @Component
-public class DmsMockData {
+public class DmsMockData implements CommandLineRunner {
+
     @Autowired
-    public DmsMockData(CandidateService candidateService, StudentshipService studentshipService, 
-                       EnrollmentService enrollmentService) {
+    CandidateService candidateService;
+
+    @Autowired
+    StudentshipService studentshipService;
+
+    @Autowired
+    EnrollmentService enrollmentService;
+
+    @Autowired
+    GradeService gradeService;
+
+    @Override
+    public void run(String... args) throws Exception {
         // Candidates
         CandidateDto[] candidates = {
-            new CandidateDto(Long.valueOf(802), "Joaquim Alberto", "joalberto43@portugal.gov"),
-            new CandidateDto(Long.valueOf(803), "Maria Albertina", "mariaa@tecnico.ulisboa.pt"),
-            new CandidateDto(Long.valueOf(809), "Vanessa Albertina", "candidaturas@vanessa.pt"),
-            new CandidateDto(Long.valueOf(810), "Candidato 810", "email@mail.com"),
-            new CandidateDto(Long.valueOf(811), "Candidato 811", "email@mail.com"),
-            new CandidateDto(Long.valueOf(812), "Candidato 812", "email@mail.com"),
-            new CandidateDto(Long.valueOf(813), "Candidato 813", "email@mail.com"),
-            new CandidateDto(Long.valueOf(814), "Candidato 814", "email@mail.com"),
+            new CandidateDto(802L, "Joaquim Alberto", "joalberto43@portugal.gov"),
+            new CandidateDto(803L, "Maria Albertina", "mariaa@tecnico.ulisboa.pt"),
+            new CandidateDto(809L, "Vanessa Albertina", "candidaturas@vanessa.pt"),
+            new CandidateDto(810L, "Candidato 810", "email@mail.com"),
+            new CandidateDto(811L, "Candidato 811", "email@mail.com"),
+            new CandidateDto(812L, "Candidato 812", "email@mail.com"),
+            new CandidateDto(813L, "Candidato 813", "email@mail.com"),
+            new CandidateDto(814L, "Candidato 814", "email@mail.com"),
         };
         for (CandidateDto candidate : candidates) {
             candidateService.createCandidate(candidate);
@@ -41,12 +57,21 @@ public class DmsMockData {
         }
         // Enrollments
         EnrollmentId[] enrollments = {
-            new EnrollmentId(Long.valueOf(802), Long.valueOf(1)),
-            new EnrollmentId(Long.valueOf(803), Long.valueOf(1)),
-            new EnrollmentId(Long.valueOf(813), Long.valueOf(1)),
+            new EnrollmentId(802L, 1L),
+            new EnrollmentId(803L, 1L),
+            new EnrollmentId(813L, 1L),
         };
         for (EnrollmentId enrollment : enrollments) {
             enrollmentService.createEnrollment(enrollment);
         }
+        // Grade Parameters
+        gradeService.createGradeParameter(new GradeParameterDto("Exercício Prático", 50.0f, 1L));
+        gradeService.createGradeParameter(new GradeParameterDto("Entrevista", 30.0f, 1L));
+        gradeService.createGradeParameter(new GradeParameterDto("Avaliação Curricular", 20.0f, 1L));
+        
+        // Grades
+        gradeService.gradeCandidate(new GradeDto(1L, 803L, 1L, 40.0f));
+        gradeService.gradeCandidate(new GradeDto(2L, 803L, 1L, 30.0f));
+        gradeService.gradeCandidate(new GradeDto(3L, 803L, 1L, 5.0f));
     }
 }
