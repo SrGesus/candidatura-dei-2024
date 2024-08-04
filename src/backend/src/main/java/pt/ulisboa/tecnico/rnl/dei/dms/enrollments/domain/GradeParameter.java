@@ -1,5 +1,8 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain.Studentship;
 
@@ -17,7 +20,8 @@ public class GradeParameter {
     @Column(nullable = false)
     private Float weight;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Studentship studentship;
 
     public GradeParameter() {

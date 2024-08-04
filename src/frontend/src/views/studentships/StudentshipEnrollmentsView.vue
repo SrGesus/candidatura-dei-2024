@@ -43,18 +43,23 @@
       https://vuetifyjs.com/en/components/data-tables/basics/#header-slot
       I don't know why eslint says it's invalid -->
     <!-- eslint-disable-next-line vue/valid-v-slot -->
-    <template v-slot:header.__add>
+    <template v-slot:header.add>
       <GradeParameterDialog :studentship-id="props.id" @parameters-saved="getParameters()">
         <v-btn 
-          class="text-none font-weight-regular"
-          size="large" 
           color="primary" 
-          variant="tonal" 
-          prepend-icon="mdi-cog"
+          variant="tonal"
           style="width: 100%;">
-          Parâmetros
+          <v-icon>mdi-plus</v-icon>
         </v-btn>
       </GradeParameterDialog>
+    </template>
+
+    <template v-for="parameter in parameters" v-slot:[`item.${parameter.id}`]="{ item }" :key="parameter.id">
+      <v-chip
+        :color="item.grades[parameter.id] >= parameter.weight / 2 ? 'success' : 'error'"
+        >
+        {{item.grades[parameter.id] ? item.grades[parameter.id] : '-' }}
+      </v-chip>
     </template>
 
   </v-data-table>
@@ -125,23 +130,26 @@ const search = ref('')
 // Typescript keeps infering to string so this was needed
 type alignment = 'start' | 'center' | 'end';
 
-const enrollHeaders = [
+const parameterHeader = ref({
+  title: 'Avaliação',
+  key: 'evaluation',
+  align: 'center' as alignment,
+  children: [],
+})
+
+const enrollHeaders = ref([
   { title: 'IST ID', key: 'candidateId', value: 'candidate.istId' },
   { title: 'Nome', key: 'name', value: 'candidate.name' },
   { title: 'E-Mail', key: 'email', value: 'candidate.email' },
-  { title: 'Ações', key: 'actions' },
-  { title: 'Avaliação', key: 'evaluation', align: 'center' as alignment, children: [] },
-];
-
-enrollHeaders[4]['children'] = [
-  { align: 'center', title: '_', key: '__add' },
-]
+  // { title: 'Avaliação', key: 'evaluation', align: 'center' as alignment, children: [] },
+  parameterHeader.value,
+]);
 
 const unenrolledHeaders = [
   { title: 'IST ID', key: 'candidateId', value: 'istId' },
   { title: 'Nome', key: 'name', value: 'name' },
   { title: 'E-Mail', key: 'email', value: 'email' },
-  
+
 ]
 
 const enrollments: EnrollmentDto[] = reactive([]);
@@ -151,14 +159,25 @@ const selected: Ref<number[]> = ref([]);
 const enrolling = ref(false);
 
 
-const parameters: Ref<GradeParameterDto[]> = ref([]);
+const parameters = reactive([]);
 
 getParameters();
 async function getParameters() {
-  parameters.value.splice(0, parameters.value.length)
+  parameters.splice(0, parameters.length)
+  parameterHeader.value.children.splice(0, parameterHeader.value.children.length)
   RemoteService.getGradeParameters(props.id).then((data) => {
     data.forEach((parameter) => {
-      parameters.value.push(parameter)
+      parameters.push(parameter)
+      enrollHeaders.value[3]['children'].push({
+        align: 'center',
+        title: parameter.name,
+        key: parameter.id.toString(),
+        value: `grades[${parameter.id}]`,
+      })
+    })
+    parameterHeader.value.children.push({
+      align: 'center',
+      key: 'add',
     })
   });
 }
@@ -201,10 +220,10 @@ import StudentshipCard from '@/views/studentships/StudentshipCard.vue';
 import CandidateDto from '@/models/candidates/CandidateDto';
 import EnrollmentDto from '@/models/enrollments/EnrollmentDto';
 import GradeParameterDialog from '../enrollments/GradeParameterDialog.vue';
+import GradeParameterDto from '@/models/grades/GradeParameterDto';
 
-const fuzzySearch = (value: string, search: string) => {
+const fuzzySearch = (value: string, search: string): boolean => {
   console.log(value, search)
-
   // Regex to match any character in between the search characters
   let searchRegex = new RegExp(search.split('').join('.*'), 'i')
   return searchRegex.test(value)

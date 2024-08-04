@@ -1,5 +1,5 @@
 <template>
-<v-dialog v-model="dialog" max-width="400">
+<v-dialog v-model="dialog" max-width="600">
   
   <!-- Activator -->
   <template v-slot:activator="{ props: activatorProps }">
@@ -13,7 +13,7 @@
   <v-form ref="form" @submit.prevent="submitForm()">
 
     <v-card-text>
-      <v-row class="" v-for="parameter in parameters.concat(newParameters)" :key="parameter.id">
+      <v-row class="text-center align-center" v-for="parameter in parameters.concat(newParameters)" :key="parameter.id">
         <v-col>
           <v-text-field
             v-model="parameter.name"
@@ -28,14 +28,17 @@
             label="Peso"
             required
             hide-details="auto"
+            control-variant="stacked"
+            :step="0.5"
           ></v-number-input>
         </v-col>
-        <v-col>
+        <v-col cols="auto">
           <v-btn
-
-          >
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
+            @click="deleteParameter(parameter)"
+            color="error"
+            variant="text"
+            icon="mdi-delete"
+          ></v-btn>
         </v-col>
         <v-divider></v-divider>
       </v-row>
@@ -91,9 +94,9 @@ const props = defineProps<{
   studentshipId: number;
 }>();
 
-function deleteParameter(parameter: GradeParameterDto) {
+const deleteParameter = (parameter: GradeParameterDto) => {
   if (parameter.id) {
-    RemoteService.deleteGradeParameter(parameter.id).then(() => {
+    RemoteService.deleteGradeParameter(parameter).then(() => {
       getParameters()
     });
   } else {
@@ -122,6 +125,7 @@ const saveParameters = async () => {
     });
   }
   for (let parameter of newParameters.value) {
+    parameter.studentshipId = props.studentshipId;
     await RemoteService.createGradeParameter(parameter).catch((error) => {
       // Catch the error to ensure reactive components are updated
       console.error(error)

@@ -1,43 +1,60 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto;
 
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Grade;
+
 public class GradeDto {
     
-    private GradeParameterDto gradeParameter;
-
-    private EnrollmentDto enrollment;
-
-    private Float value;
+    private Long gradeParameterId;
+    private Long candidateIstId;
+    private Long studentshipId;
+    private Double grade;
 
     public GradeDto() {
     }
 
-    public GradeDto(GradeParameterDto gradeParameter, EnrollmentDto enrollment, Float value) {
-        this.gradeParameter = gradeParameter;
-        this.enrollment = enrollment;
-        this.value = value;
+    public GradeDto(Long gradeParameterId, Long candidateIstId, Long studentshipId, Double value) {
+        this.gradeParameterId = gradeParameterId;
+        this.candidateIstId = candidateIstId;
+        this.studentshipId = studentshipId;
+        this.grade = value;
     }
 
-    public GradeParameterDto getGradeParameter() {
-        return gradeParameter;
+    public GradeDto(Grade grade) {
+        this.gradeParameterId = grade.getGradeParameter().getId();
+        this.candidateIstId = grade.getEnrollment().getCandidate().getIstId();
+        this.studentshipId = grade.getEnrollment().getStudentship().getId();
+        this.grade = grade.getGrade();
     }
 
-    public EnrollmentDto getEnrollment() {
-        return enrollment;
+    public Long getGradeParameterId() {
+        return gradeParameterId;
     }
 
-    public Float getValue() {
-        return value;
+    public Long getCandidateIstId() {
+        return candidateIstId;
     }
 
-    public void setGradeParameter(GradeParameterDto gradeParameter) {
-        this.gradeParameter = gradeParameter;
+    public Long getStudentshipId() {
+        return studentshipId;
     }
 
-    public void setEnrollment(EnrollmentDto enrollment) {
-        this.enrollment = enrollment;
+    public Double getGrade() {
+        return grade;
     }
 
-    public void setValue(Float value) {
-        this.value = value;
+    public void setGradeParameterId(Long gradeParameterId) {
+        this.gradeParameterId = gradeParameterId;
+    }
+
+    public void setCandidateIstId(Long candidateIstId) {
+        this.candidateIstId = candidateIstId;
+    }
+
+    public void setStudentshipId(Long studentshipId) {
+        this.studentshipId = studentshipId;
+    }
+
+    public void setGrade(Double grade) {
+        this.grade = grade;
     }
 }

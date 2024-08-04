@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.EnrollmentId;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.GradeDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.GradeParameterDto;
 
 @RestController
@@ -32,9 +33,14 @@ public class GradeController {
         return gradeService.updateGradeParameter(gradeParameterDto);
     }
 
+    @DeleteMapping(value = "/delete/{gradeParameterId}")
+    public void deleteGradeParameter(@PathVariable Long gradeParameterId) {
+        gradeService.deleteGradeParameter(gradeParameterId);
+    }
+
     @PostMapping(value = "/grade")
-    public Enrollment gradeCandidate(@RequestBody EnrollmentId enrollmentId, @RequestBody GradeParameterDto gradeParameterDto, @RequestBody Double grade) {
-        return gradeService.gradeCandidate(enrollmentId, gradeParameterDto, grade);
+    public GradeDto gradeCandidate(@RequestBody GradeDto gradeDto) {
+        return gradeService.gradeCandidate(gradeDto);
     }
 
 

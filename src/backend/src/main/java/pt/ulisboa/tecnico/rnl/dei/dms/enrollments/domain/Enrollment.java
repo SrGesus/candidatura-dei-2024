@@ -1,6 +1,10 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain;
 
 import java.util.Map;
+import java.util.Set;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
@@ -14,15 +18,18 @@ public class Enrollment {
     private EnrollmentId enrollmentId;
 
     @MapsId("candidateIstId")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Candidate candidate;
 
     @MapsId("studentshipId")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Studentship studentship;
 
-    @ElementCollection
-    private Map<GradeParameter, Double> grades;
+    // Map of every gradeparameter id to the grade
+    @OneToMany(mappedBy = "enrollment")
+    private Set<Grade> grades;
 
     public Enrollment() {
     }
@@ -41,7 +48,7 @@ public class Enrollment {
         return studentship;
     }
 
-    public Map<GradeParameter, Double> getGrades() {
+    public Set<Grade> getGrades() {
         return grades;
     }
 
@@ -55,7 +62,7 @@ public class Enrollment {
         this.studentship = studentship;
     }
 
-    public void setGrades(Map<GradeParameter, Double> grades) {
+    public void setGrades(Set<Grade> grades) {
         this.grades = grades;
     }
 
