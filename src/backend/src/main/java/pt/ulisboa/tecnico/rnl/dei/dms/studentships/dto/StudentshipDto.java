@@ -1,33 +1,42 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.studentships.dto;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain.Studentship;
 
 public class StudentshipDto {
+    
     private Long id;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Float pay;
+    private Double amount;
     private Integer vacancies;
+    private Boolean active;
+    private List<GradeParameterDto> gradeParameters;
 
     public StudentshipDto() {
     }
 
-    public StudentshipDto(LocalDate startDate, LocalDate endDate, Float pay, Integer vacancies) {
+    public StudentshipDto(LocalDate startDate, LocalDate endDate, Double amount, Integer vacancies, Boolean active, List<GradeParameterDto> gradeParameters) {
         this.startDate = startDate;
         this.endDate = endDate;
-        this.pay = pay;
+        this.amount = amount;
         this.vacancies = vacancies;
+        this.active = active;
+        this.gradeParameters = gradeParameters;
     }
 
     public StudentshipDto(Studentship studentship) {
         this.id = studentship.getId();
         this.startDate = studentship.getStartDate();
         this.endDate = studentship.getEndDate();
-        this.pay = studentship.getPay();
+        this.amount = studentship.getAmount();
         this.vacancies = studentship.getVacancies();
+        this.active = studentship.getActive();
+        this.gradeParameters = studentship.getGradeParameters() != null ? studentship.getGradeParameters()
+            .stream().map(GradeParameterDto::new).collect(Collectors.toList()) : null;
     }
 
     public Long getId() {
@@ -42,12 +51,20 @@ public class StudentshipDto {
         return endDate;
     }
 
-    public Float getPay() {
-        return pay;
+    public Double getAmount() {
+        return amount;
     }
 
     public Integer getVacancies() {
         return vacancies;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public List<GradeParameterDto> getGradeParameters() {
+        return gradeParameters;
     }
 
     public void setStartDate(LocalDate startDate) {
@@ -58,23 +75,19 @@ public class StudentshipDto {
         this.endDate = endDate;
     }
 
-    public void setPay(Float pay) {
-        this.pay = pay;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public void setVacancies(Integer vacancies) {
         this.vacancies = vacancies;
     }
 
-    @Override
-    public String toString() {
-        return "Studentship{" +
-                "id=" + id +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", pay=" + pay +
-                ", vacancies=" + vacancies +
-                '}';
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
+    public void setGradeParameters(List<GradeParameterDto> gradeParameters) {
+        this.gradeParameters = gradeParameters;
+    }
 }

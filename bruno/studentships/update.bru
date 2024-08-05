@@ -1,0 +1,34 @@
+meta {
+  name: update
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:8080/studentships/update
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": 1,
+    "startDate": "2030-10-10",
+    "endDate": "2031-10-10",
+    "amount": 4,
+    "active": true,
+    "gradeParameters": [
+      {
+        "id": 2,
+        "name": "Name",
+        "weight": 20.0
+      },
+      {
+        "id": 1,
+        "name": "newName",
+        "weight": 25.0
+      }
+    ]
+  }
+  
+}

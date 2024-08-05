@@ -1,48 +1,49 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.enrollments;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.EnrollmentId;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.EnrollmentDto;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/enrollments")
 public class EnrollmentController {
-    
+
     @Autowired
     private EnrollmentService enrollmentService;
 
-    @GetMapping(value = "/all",
-                produces = "application/json; charset=utf-8")
-    public List<EnrollmentDto> getEnrollments() {
-        return enrollmentService.getEnrollments();
+    @PostMapping("/create")
+    public EnrollmentDto createEnrollment(@RequestBody EnrollmentDto enrollmentDto) {
+        return enrollmentService.createEnrollment(enrollmentDto);
     }
 
-    // TODO: Make this receive a query parameter instead of two different endpoints
-    @GetMapping(value = "/candidate/{candidateId}",
-                produces = "application/json; charset=utf-8")
-    public List<EnrollmentDto> getCandidateEnrollments(@PathVariable Long candidateId) {
-        return enrollmentService.getCandidateEnrollments(candidateId);
+    @GetMapping("/all")
+    public List<EnrollmentDto> getAllEnrollments() {
+        return enrollmentService.getAllEnrollments();
     }
 
-    // TODO: Make this receive a query parameter instead of two different endpoints
-    @GetMapping(value = "/studentship/{studentshipId}",
-                produces = "application/json; charset=utf-8")
-    public List<EnrollmentDto> getStudentshipEnrollments(@PathVariable Long studentshipId) {
-        return enrollmentService.getStudentshipEnrollments(studentshipId);
+    @GetMapping("/candidate/{istId}")
+    public List<EnrollmentDto> getEnrollmentsByCandidateIstId(@PathVariable Long istId) {
+        return enrollmentService.getEnrollmentsByCandidateIstId(istId);
     }
 
-    // TODO: Allow for multiple enrollments to be created at once
-    @PostMapping(value = "/create")
-    public EnrollmentDto createEnrollment(@RequestBody EnrollmentId enrollmentId) {
-        return enrollmentService.createEnrollment(enrollmentId);
+    @GetMapping("/studentship/{id}")
+    public List<EnrollmentDto> getEnrollmentsByStudentshipId(@PathVariable Long id) {
+        return enrollmentService.getEnrollmentsByStudentshipId(id);
     }
 
-    @DeleteMapping(value = "/delete/{candidateId}/{studentshipId}")
-    public List<EnrollmentDto> deleteEnrollment(@PathVariable Long candidateId, @PathVariable Long studentshipId) {
-        return enrollmentService.deleteEnrollment(new EnrollmentId(candidateId, studentshipId));
+    @PutMapping("/update")
+    public EnrollmentDto updateEnrollment(@RequestBody EnrollmentDto enrollmentDto) {
+        return enrollmentService.updateEnrollment(enrollmentDto);
     }
+
+    @DeleteMapping("/delete/{candidateIstId}/{studentshipId}")
+    public void deleteEnrollment(@PathVariable Long candidateIstId, @PathVariable Long studentshipId) {
+        enrollmentService.deleteEnrollment(candidateIstId, studentshipId);
+    }
+
+    
 }

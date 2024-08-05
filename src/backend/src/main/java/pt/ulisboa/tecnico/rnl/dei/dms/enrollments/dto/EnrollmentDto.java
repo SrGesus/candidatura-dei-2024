@@ -2,56 +2,47 @@ package pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Enrollment;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
-import pt.ulisboa.tecnico.rnl.dei.dms.studentships.dto.StudentshipDto;
-
 public class EnrollmentDto {
-
-    private CandidateDto candidate;
-    private StudentshipDto studentship;
-    private Map<Long, Float> grades;
+    private Long candidateIstId;
+    private Long studentshipId;
+    private Boolean accepted;
 
     public EnrollmentDto() {
     }
 
+    public EnrollmentDto(Long candidateIstId, Long studentshipId, Boolean accepted) {
+        this.candidateIstId = candidateIstId;
+        this.studentshipId = studentshipId;
+        this.accepted = accepted;
+    }
+
     public EnrollmentDto(Enrollment enrollment) {
-        this.candidate = new CandidateDto(enrollment.getCandidate());
-        this.studentship = new StudentshipDto(enrollment.getStudentship());
-        this.grades = enrollment.getGrades() == null ? null : enrollment.getGrades().stream()
-            .map(grade -> Map.entry(grade.getGradeParameter().getId(), grade.getGrade()))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        this.candidateIstId = enrollment.getCandidate().getIstId();
+        this.studentshipId = enrollment.getStudentship().getId();
+        this.accepted = enrollment.getAccepted();
     }
 
-    public CandidateDto getCandidate() {
-        return candidate;
-    }
-    
-    public StudentshipDto getStudentship() {
-        return studentship;
+    public Long getCandidateIstId() {
+        return candidateIstId;
     }
 
-    public Map<Long, Float> getGrades() {
-        return grades;
+    public Long getStudentshipId() {
+        return studentshipId;
     }
 
-    public void setCandidate(CandidateDto candidate) {
-        this.candidate = candidate;
+    public Boolean getAccepted() {
+        return accepted;
     }
 
-    public void setStudentship(StudentshipDto studentship) {
-        this.studentship = studentship;
+    public void setCandidateIstId(Long candidateIstId) {
+        this.candidateIstId = candidateIstId;
     }
 
-    @Override
-    public String toString() {
-        return "Enrollment{" +
-                "candidate=" + candidate +
-                ", studentship=" + studentship +
-                '}';
+    public void setStudentshipId(Long studentshipId) {
+        this.studentshipId = studentshipId;
     }
 
+    public void setAccepted(Boolean accepted) {
+        this.accepted = accepted;
+    }
 }

@@ -8,4 +8,5 @@ import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 
 @Repository
 @Transactional
-public interface CandidateRepository extends JpaRepository<Candidate, Long> {}
+public interface CandidateRepository extends JpaRepository<Candidate, Long> {
+}

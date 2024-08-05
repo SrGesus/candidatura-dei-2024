@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.candidates;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.repository.CandidateRepository;
-import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.BadRequestException;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.NotFoundException;
 
 
 @Service
@@ -18,38 +17,31 @@ public class CandidateService {
 
     @Autowired
     private CandidateRepository candidateRepository;
-    
+
     public CandidateDto createCandidate(CandidateDto candidateDto) {
-        if (!candidateRepository.findById(candidateDto.getIstId()).isEmpty())
-            throw new BadRequestException("Candidate with istId " + candidateDto.getIstId() + " already exists");
         Candidate candidate = new Candidate(candidateDto);
         candidateRepository.save(candidate);
         return new CandidateDto(candidate);
     }
 
-    public List<CandidateDto> getCandidates() {
+    public List<CandidateDto> getAllCandidates() {
         return candidateRepository.findAll().stream().map(CandidateDto::new).collect(Collectors.toList());
     }
 
-    public Optional<CandidateDto> getCandidate(Long istId) {
-        return candidateRepository.findById(istId).map(CandidateDto::new);
-    }
-
-    public List<CandidateDto> updateCandidate(CandidateDto candidateDto) {
-        Candidate candidate = candidateRepository.findById(candidateDto.getIstId()).get();
-        candidate.setIstId(candidateDto.getIstId());
+    public CandidateDto updateCandidate(CandidateDto candidateDto) {
+        Candidate candidate = candidateRepository.findById(candidateDto.getIstId()).orElseThrow(
+            () -> new NotFoundException("Candidate with IST ID " + candidateDto.getIstId() + " not found")
+        );
         candidate.setName(candidateDto.getName());
         candidate.setEmail(candidateDto.getEmail());
         candidateRepository.save(candidate);
-        // TODO: Not used Consider returning void
-        return getCandidates();
+        return new CandidateDto(candidate);
     }
 
-    public List<CandidateDto> deleteCandidate(Long istId) {
-        candidateRepository.deleteById(istId);
-        // TODO: Not used Consider returning void
-        return getCandidates();
+    public void deleteCandidate(Long istId) {
+        Candidate candidate = candidateRepository.findById(istId).orElseThrow(
+            () -> new NotFoundException("Candidate with IST ID " + istId + " not found")
+        );
+        candidateRepository.delete(candidate);  
     }
-
-    
 }

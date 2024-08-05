@@ -1,28 +1,26 @@
-package pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto;
+package pt.ulisboa.tecnico.rnl.dei.dms.studentships.dto;
 
-import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.GradeParameter;
+import pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain.GradeParameter;
 
 public class GradeParameterDto {
-
+    
     private Long id;
     private String name;
-    private Float weight;
-    private Long studentshipId;
+    private Double weight;
 
     public GradeParameterDto() {
     }
 
-    public GradeParameterDto(String name, Float weight, Long studentshipId) {
+    public GradeParameterDto(String name, Double weight) {
+        this.id = null;
         this.name = name;
         this.weight = weight;
-        this.studentshipId = studentshipId;
     }
 
     public GradeParameterDto(GradeParameter gradeParameter) {
         this.id = gradeParameter.getId();
         this.name = gradeParameter.getName();
         this.weight = gradeParameter.getWeight();
-        this.studentshipId = gradeParameter.getStudentship().getId();
     }
 
     public Long getId() {
@@ -33,23 +31,15 @@ public class GradeParameterDto {
         return name;
     }
 
-    public Float getWeight() {
+    public Double getWeight() {
         return weight;
-    }
-
-    public Long getStudentshipId() {
-        return studentshipId;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setWeight(Float weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
-    }
-
-    public void setStudentshipId(Long studentshipId) {
-        this.studentshipId = studentshipId;
     }
 }

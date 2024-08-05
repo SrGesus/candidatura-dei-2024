@@ -1,23 +1,22 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain;
 
-
-
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 
 @Entity
 @Table(name = "candidate")
 public class Candidate {
-
+    
     @Id
     private Long istId;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String email;
 
     public Candidate() {
-
     }
 
     public Candidate(Long istId, String name, String email) {
@@ -55,14 +54,4 @@ public class Candidate {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    @Override
-    public String toString() {
-        return "Candidate{" +
-                "istId=" + istId +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
-
 }

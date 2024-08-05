@@ -1,0 +1,19 @@
+meta {
+  name: create
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/enrollments/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "candidateIstId": 100003,
+    "studentshipId": 1,
+    "accepted": false
+  }
+}

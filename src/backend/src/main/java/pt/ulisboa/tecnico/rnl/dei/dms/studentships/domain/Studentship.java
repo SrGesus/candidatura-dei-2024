@@ -1,6 +1,11 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.dto.StudentshipDto;
@@ -8,37 +13,42 @@ import pt.ulisboa.tecnico.rnl.dei.dms.studentships.dto.StudentshipDto;
 @Entity
 @Table(name = "studentship")
 public class Studentship {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
     private LocalDate startDate;
 
-    @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
     private LocalDate endDate;
 
-    private Float pay;
+    @Column(nullable = false)
+    private Double amount;
 
+    @Column(nullable = false)
     private Integer vacancies;
 
+    @Column(nullable = false)
+    private Boolean active;
+
+    @OneToMany(mappedBy = "studentship", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<GradeParameter> gradeParameters;
+
     public Studentship() {
-
-    }
-
-    public Studentship(LocalDate startDate, LocalDate endDate, Float pay, Integer vacancies) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.pay = pay;
-        this.vacancies = vacancies;
     }
 
     public Studentship(StudentshipDto studentshipDto) {
+        this.id = studentshipDto.getId();
         this.startDate = studentshipDto.getStartDate();
         this.endDate = studentshipDto.getEndDate();
-        this.pay = studentshipDto.getPay();
+        this.amount = studentshipDto.getAmount();
         this.vacancies = studentshipDto.getVacancies();
+        this.active = studentshipDto.getActive();
+        this.gradeParameters = studentshipDto.getGradeParameters() != null ? studentshipDto.getGradeParameters()
+            .stream().map(gradeParameterDto -> new GradeParameter(gradeParameterDto, this)).collect(Collectors.toList()) : null;
     }
 
     public Long getId() {
@@ -53,12 +63,20 @@ public class Studentship {
         return endDate;
     }
 
-    public Float getPay() {
-        return pay;
+    public Double getAmount() {
+        return amount;
     }
 
     public Integer getVacancies() {
         return vacancies;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public List<GradeParameter> getGradeParameters() {
+        return gradeParameters;
     }
 
     public void setStartDate(LocalDate startDate) {
@@ -69,22 +87,19 @@ public class Studentship {
         this.endDate = endDate;
     }
 
-    public void setPay(Float pay) {
-        this.pay = pay;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public void setVacancies(Integer vacancies) {
         this.vacancies = vacancies;
     }
 
-    @Override
-    public String toString() {
-        return "Studentship{" +
-                "id=" + id +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", pay=" + pay +
-                ", vacancies=" + vacancies +
-                '}';
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public void setGradeParameters(List<GradeParameter> gradeParameters) {
+        this.gradeParameters = gradeParameters;
     }
 }

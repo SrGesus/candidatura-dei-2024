@@ -1,8 +1,5 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -11,33 +8,45 @@ import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain.Studentship;
 
 @Entity
-@Table(name = "enrollment")
+@Table(name = "enrollment", indexes = {
+    @Index(name = "enrollment_candidate_ist_id_idx", columnList = "candidateIstId"),
+    @Index(name = "enrollment_studentship_id_idx", columnList = "studentshipId")
+})
+@IdClass(EnrollmentId.class)
 public class Enrollment {
+    
+    @Id
+    @Column(name = "candidate_ist_id")
+    private Long candidateIstId;
 
-    @EmbeddedId
-    private EnrollmentId enrollmentId;
+    @Id
+    @Column(name = "studentship_id")
+    private Long studentshipId;
 
-    @MapsId("candidateIstId")
-    @ManyToOne()
+    @MapsId
+    @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Candidate candidate;
 
-    @MapsId("studentshipId")
-    @ManyToOne()
+    @MapsId
+    @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Studentship studentship;
 
-    // Map of every gradeparameter id to the grade
-    @OneToMany(mappedBy = "enrollment", cascade = CascadeType.ALL)
-    private Set<Grade> grades;
+    @Column(nullable = false)
+    private Boolean accepted;
+
+    // Set of grades
 
     public Enrollment() {
     }
 
-    public Enrollment(Candidate candidate, Studentship studentship) {
-        this.enrollmentId = new EnrollmentId(candidate.getIstId(), studentship.getId());
+    public Enrollment(Candidate candidate, Studentship studentship, Boolean accepted) {
         this.candidate = candidate;
         this.studentship = studentship;
+        this.candidateIstId = candidate.getIstId();
+        this.studentshipId = studentship.getId();
+        this.accepted = accepted;
     }
 
     public Candidate getCandidate() {
@@ -48,30 +57,21 @@ public class Enrollment {
         return studentship;
     }
 
-    public Set<Grade> getGrades() {
-        return grades;
+    public Boolean getAccepted() {
+        return accepted;
     }
 
     public void setCandidate(Candidate candidate) {
-        this.enrollmentId.setCandidateIstId(candidate.getIstId());
+        this.candidateIstId = candidate.getIstId();
         this.candidate = candidate;
     }
 
     public void setStudentship(Studentship studentship) {
-        this.enrollmentId.setStudentshipId(studentship.getId());
+        this.studentshipId = studentship.getId();
         this.studentship = studentship;
     }
 
-    public void setGrades(Set<Grade> grades) {
-        this.grades = grades;
+    public void setAccepted(Boolean accepted) {
+        this.accepted = accepted;
     }
-
-    @Override
-    public String toString() {
-        return "Enrollment{" +
-                ", candidate=" + candidate +
-                ", studentship=" + studentship +
-                '}';
-    }
-
 }

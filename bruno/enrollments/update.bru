@@ -1,0 +1,19 @@
+meta {
+  name: update
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8080/enrollments/update
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "candidateIstId": 100003,
+    "studentshipId": 2,
+    "accepted": true
+  }
+}

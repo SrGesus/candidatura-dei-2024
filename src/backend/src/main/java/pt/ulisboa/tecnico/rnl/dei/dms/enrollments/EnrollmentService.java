@@ -7,18 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
-import pt.ulisboa.tecnico.rnl.dei.dms.candidates.repository.CandidateRepository;
-import pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain.Studentship;
-import pt.ulisboa.tecnico.rnl.dei.dms.studentships.repository.StudentshipRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Enrollment;
-import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.EnrollmentDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.EnrollmentId;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.EnrollmentDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.candidates.repository.CandidateRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.repository.EnrollmentRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.NotFoundException;
-
+import pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain.Studentship;
+import pt.ulisboa.tecnico.rnl.dei.dms.studentships.repository.StudentshipRepository;
 
 @Service
 public class EnrollmentService {
+    
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
 
     @Autowired
     private CandidateRepository candidateRepository;
@@ -26,41 +28,43 @@ public class EnrollmentService {
     @Autowired
     private StudentshipRepository studentshipRepository;
 
-    @Autowired
-    private EnrollmentRepository enrollmentRepository;
-
-    public List<EnrollmentDto> getEnrollments() {
-        return enrollmentRepository.findAll().stream()
-            .map(EnrollmentDto::new).collect(Collectors.toList());
-    }
-    
-    public List<EnrollmentDto> getCandidateEnrollments(Long candidateId) {
-        return enrollmentRepository.findByCandidateIstId(candidateId).stream()
-            .map(EnrollmentDto::new).collect(Collectors.toList());
-    }
-
-    public List<EnrollmentDto> getStudentshipEnrollments(Long studentshipId) {
-        return enrollmentRepository.findByStudentshipId(studentshipId).stream()
-            .map(EnrollmentDto::new).collect(Collectors.toList());
-    }
-
-    public EnrollmentDto createEnrollment(EnrollmentId enrollmentId) {
-        Candidate candidate = candidateRepository.findById(enrollmentId.getCandidateIstId()).orElseThrow(
-            () ->
-            new NotFoundException("Candidate with istId " + enrollmentId.getCandidateIstId() + " not found")
+    public EnrollmentDto createEnrollment(EnrollmentDto enrollmentDto) {
+        Candidate candidate = candidateRepository.findById(enrollmentDto.getCandidateIstId()).orElseThrow(
+            () -> new NotFoundException("Candidate with IST ID " + enrollmentDto.getCandidateIstId() + " not found")
         );
-        Studentship studentship = studentshipRepository.findById(enrollmentId.getStudentshipId()).orElseThrow(
-            () ->
-            new NotFoundException("Studentship with id " + enrollmentId.getStudentshipId() + " not found")
+        Studentship studentship = studentshipRepository.findById(enrollmentDto.getStudentshipId()).orElseThrow(
+            () -> new NotFoundException("Studentship with ID " + enrollmentDto.getStudentshipId() + " not found")
         );
-        Enrollment enrollment = new Enrollment(candidate, studentship);
-        enrollmentRepository.save(enrollment);
+        Enrollment enrollment = new Enrollment(candidate, studentship, enrollmentDto.getAccepted());
+        enrollment = enrollmentRepository.save(enrollment);
         return new EnrollmentDto(enrollment);
     }
 
-    public List<EnrollmentDto> deleteEnrollment(EnrollmentId enrollmentId) {
-        enrollmentRepository.deleteById(enrollmentId);
-        // TODO: Not used Consider returning void
-        return getEnrollments();
+    public List<EnrollmentDto> getAllEnrollments() {
+        return enrollmentRepository.findAll().stream().map(EnrollmentDto::new).collect(Collectors.toList());
+    }
+
+    public List<EnrollmentDto> getEnrollmentsByCandidateIstId(Long candidateIstId) {
+        return enrollmentRepository.findByCandidateIstId(candidateIstId).stream().map(EnrollmentDto::new).collect(Collectors.toList());
+    }
+
+    public List<EnrollmentDto> getEnrollmentsByStudentshipId(Long studentshipId) {
+        return enrollmentRepository.findByStudentshipId(studentshipId).stream().map(EnrollmentDto::new).collect(Collectors.toList());
+    }
+
+    public EnrollmentDto updateEnrollment(EnrollmentDto enrollmentDto) {
+        Enrollment enrollment = enrollmentRepository.findById(new EnrollmentId(enrollmentDto.getCandidateIstId(), enrollmentDto.getStudentshipId())).orElseThrow(
+            () -> new NotFoundException("Enrollment with Candidate IST ID " + enrollmentDto.getCandidateIstId() + " and Studentship ID " + enrollmentDto.getStudentshipId() + " not found")
+        );
+        enrollment.setAccepted(enrollmentDto.getAccepted());
+        enrollment = enrollmentRepository.save(enrollment);
+        return new EnrollmentDto(enrollment);
+    }
+
+    public void deleteEnrollment(Long candidateIstId, Long studentshipId) {
+        Enrollment enrollment = enrollmentRepository.findById(new EnrollmentId(candidateIstId, studentshipId)).orElseThrow(
+            () -> new NotFoundException("Enrollment with Candidate IST ID " + candidateIstId + " and Studentship ID " + studentshipId + " not found")
+        );
+        enrollmentRepository.delete(enrollment);
     }
 }

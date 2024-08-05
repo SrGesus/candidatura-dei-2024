@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 
 public class CandidateDto {
+    
     private Long istId;
     private String name;
     private String email;
@@ -21,7 +22,7 @@ public class CandidateDto {
         this.name = candidate.getName();
         this.email = candidate.getEmail();
     }
-    
+
     public Long getIstId() {
         return istId;
     }
@@ -44,14 +45,5 @@ public class CandidateDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    @Override
-    public String toString() {
-        return "Candidate{" +
-                "istId=" + istId +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
     }
 }
