@@ -1,14 +1,12 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.studentships;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.EntitityAlreadyExists;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.NotFoundException;
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain.Studentship;
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.dto.StudentshipDto;
