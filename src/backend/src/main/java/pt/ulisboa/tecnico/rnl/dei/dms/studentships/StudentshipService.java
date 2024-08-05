@@ -44,7 +44,12 @@ public class StudentshipService {
         Studentship studentship = studentshipRepository.findById(studentshipDto.getId()).orElseThrow(
             () -> new NotFoundException("Studentship with ID " + studentshipDto.getId() + " not found")
         );
-        studentship = studentshipRepository.save(new Studentship(studentshipDto));
+        Studentship updatedStudentship = new Studentship(studentshipDto);
+        updatedStudentship.setGradeParameters(
+            updatedStudentship.getGradeParameters() != null ? updatedStudentship.getGradeParameters()
+                : studentship.getGradeParameters()
+        );
+        studentshipRepository.save(updatedStudentship);
         return new StudentshipDto(studentship);
     }   
 

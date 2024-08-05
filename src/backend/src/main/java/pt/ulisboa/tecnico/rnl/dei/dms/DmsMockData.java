@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.rnl.dei.dms;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -64,11 +65,13 @@ public class DmsMockData implements CommandLineRunner {
 
         // Enrollments
         EnrollmentDto[] enrollments = {
-            new EnrollmentDto(100000L, 1L, false),
-            new EnrollmentDto(100000L, 2L, false),
-            new EnrollmentDto(100001L, 1L, false),
-            new EnrollmentDto(100003L, 2L, false),
-            new EnrollmentDto(100004L, 3L, false),
+            new EnrollmentDto(100000L, 1L, false, Map.of(
+                1L, 9.0
+            )),
+            new EnrollmentDto(100000L, 2L, false, Map.of()),
+            new EnrollmentDto(100001L, 1L, false, Map.of()),
+            new EnrollmentDto(100003L, 2L, false, Map.of()),
+            new EnrollmentDto(100004L, 3L, false, Map.of()),
         };
         for (EnrollmentDto enrollment : enrollments) {
             enrollmentService.createEnrollment(enrollment);

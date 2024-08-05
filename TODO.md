@@ -31,7 +31,7 @@ Tabelas:
 - [x] Dentro de uma bolsa, permitir avaliar candidatos, guardando, para cada um, a nota atribuída a cada categoria de avaliação (por exemplo, "Avaliação curricular", "Entrevista", "Exercício prático");
 - [x] Dentro de uma bolsa, permitir visualizar a média final de cada candidato, calculada com base nas notas atribuídas e nos pesos das categorias de avaliação.
 - [ ] Dentro de uma bolsa, uma vez que as avaliações estejam concluídas, permitir selecionar o(s) candidato(s) vencedor(es) da bolsa.
-
+- [ ] Batch enrollment  
 
 Color Scale:
 

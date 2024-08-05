@@ -5,7 +5,15 @@ meta {
 }
 
 put {
-  url: http://localhost:8080/candidates/all
-  body: none
+  url: http://localhost:8080/candidates/update
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "istId": 100005,
+    "name": "Tó Zé do Campo",
+    "email": "gmail@mail.pt"
+  }
 }

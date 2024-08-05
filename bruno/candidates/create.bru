@@ -6,6 +6,14 @@ meta {
 
 post {
   url: http://localhost:8080/candidates/create
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "istId": 802,
+    "name": "Jorge",
+    "email": "Jorge@mail.com"
+  }
 }

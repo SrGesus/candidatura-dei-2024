@@ -17,13 +17,13 @@
 Clone the project
 
 ```bash
-git clone git@github.com:SrGesus/candidatura-dei-2024.git DMS
+git clone git@github.com:SrGesus/candidatura-dei-2024.git
 ```
 
 Go to the project directory
 
 ```bash
-cd DMS/
+cd dei-cms-gabriel-ferreira/
 ```
 
 ### Database
