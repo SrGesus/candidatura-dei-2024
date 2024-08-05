@@ -42,10 +42,12 @@ public class Enrollment {
 
     @ElementCollection
     @CollectionTable(name = "grade", joinColumns = {
-        // On Delete Cascade is not needed here because JPA will delete the grades when the Enrollment is deleted
         @JoinColumn(name = "enrollment_candidate_ist_id", referencedColumnName = "candidate_ist_id"),
         @JoinColumn(name = "enrollment_studentship_id", referencedColumnName = "studentship_id")
-    })
+    }, foreignKey = @ForeignKey(
+        name = "grade_enrollment_fkey",
+        foreignKeyDefinition = "FOREIGN KEY (enrollment_candidate_ist_id, enrollment_studentship_id) REFERENCES enrollment(candidate_ist_id, studentship_id) ON DELETE CASCADE"
+    ))
     @MapKeyJoinColumn(name = "grade_parameter_id", foreignKey = @ForeignKey(
         name = "grade_grade_parameter_id_fkey",
         // JPA doesn't seem to allow a better way to make On Delete Cascade work for grade_parameters
