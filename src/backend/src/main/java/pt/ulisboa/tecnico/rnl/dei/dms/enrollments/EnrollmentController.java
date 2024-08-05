@@ -1,8 +1,10 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.enrollments;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.EnrollmentDto;
@@ -42,6 +44,22 @@ public class EnrollmentController {
     @DeleteMapping("/delete/{candidateIstId}/{studentshipId}")
     public void deleteEnrollment(@PathVariable Long candidateIstId, @PathVariable Long studentshipId) {
         enrollmentService.deleteEnrollment(candidateIstId, studentshipId);
+    }
+
+    // Batch operations for convenience
+
+    @Transactional
+    @PostMapping("/create/batch")
+    public List<EnrollmentDto> createEnrollments(@RequestBody List<EnrollmentDto> enrollmentDtos) {
+        return enrollmentDtos.stream()
+            .map(e -> enrollmentService.createEnrollment(e))
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @DeleteMapping("/delete/batch")
+    public void deleteEnrollments(@RequestBody List<EnrollmentDto> enrollmentDtos) {
+        enrollmentDtos.forEach(e -> enrollmentService.deleteEnrollment(e.getCandidateIstId(), e.getStudentshipId()));
     }
 
     

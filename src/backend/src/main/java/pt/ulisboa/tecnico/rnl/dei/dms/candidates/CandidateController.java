@@ -34,19 +34,4 @@ public class CandidateController {
         candidateService.deleteCandidate(istId);
     }
 
-    // Batch operations for convenience
-
-    @PostMapping("/batch")
-    public void createCandidates(@RequestBody List<CandidateDto> candidateDtos) {
-        for (CandidateDto candidateDto : candidateDtos) {
-            candidateService.createCandidate(candidateDto);
-        }
-    }
-
-    @DeleteMapping("/batch")
-    public void deleteCandidates(@RequestBody List<Long> istIds) {
-        for (Long istId : istIds) {
-            candidateService.deleteCandidate(istId);
-        }
-    }
 }
