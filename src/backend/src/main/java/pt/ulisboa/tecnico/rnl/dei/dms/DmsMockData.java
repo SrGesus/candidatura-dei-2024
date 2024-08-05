@@ -38,6 +38,7 @@ public class DmsMockData implements CommandLineRunner {
             new CandidateDto(100003L, "Maria José", "mase@portugal.gov"),
             new CandidateDto(100004L, "Chico da Tina", "chico@tina.da"),
             new CandidateDto(100005L, "Tó Zé", "gmail@mail.pt"),
+            new CandidateDto(100006L, "Barnabé da Silva", "bdslv@ulisboa.pt"),
         };
         for (CandidateDto candidate : candidates) {
             candidateService.createCandidate(candidate);
@@ -70,14 +71,27 @@ public class DmsMockData implements CommandLineRunner {
             )),
             new EnrollmentDto(100000L, 2L, false, Map.of()),
             new EnrollmentDto(100001L, 1L, false, Map.of()),
-            new EnrollmentDto(100003L, 2L, false, Map.of()),
+            new EnrollmentDto(100002L, 2L, false, Map.of(
+                3L, 9.0,
+                4L, 6.0,
+                5L, 2.0
+            )),
+            new EnrollmentDto(100003L, 2L, false, Map.of(
+                3L, 8.0,
+                4L, 5.0,
+                5L, 4.0
+            )),
+            new EnrollmentDto(100004L, 2L, false, Map.of(
+                
+            )),
+            new EnrollmentDto(100005L, 2L, false, Map.of(
+                
+            )),
             new EnrollmentDto(100004L, 3L, false, Map.of()),
         };
         for (EnrollmentDto enrollment : enrollments) {
             enrollmentService.createEnrollment(enrollment);
         }
-
-        // 
     }
     
 }

@@ -1,0 +1,42 @@
+meta {
+  name: delete batch
+  type: http
+  seq: 8
+}
+
+delete {
+  url: http://localhost:8080/enrollments/delete/batch
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "candidateIstId": 100000,
+      "studentshipId": 1,
+      "accepted": false,
+      "grades": {
+        "1": 9
+      }
+    },
+    {
+      "candidateIstId": 100000,
+      "studentshipId": 2,
+      "accepted": false,
+      "grades": {}
+    },
+    {
+      "candidateIstId": 100001,
+      "studentshipId": 1,
+      "accepted": false,
+      "grades": {}
+    },
+    {
+      "candidateIstId": 100003,
+      "studentshipId": 2,
+      "accepted": false,
+      "grades": {}
+    }
+  ]
+}
