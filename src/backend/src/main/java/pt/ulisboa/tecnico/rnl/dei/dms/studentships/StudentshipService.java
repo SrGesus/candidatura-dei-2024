@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.EntitityAlreadyExists;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.NotFoundException;
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain.Studentship;
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.dto.StudentshipDto;
@@ -45,6 +46,7 @@ public class StudentshipService {
             () -> new NotFoundException("Studentship with ID " + studentshipDto.getId() + " not found")
         );
         Studentship updatedStudentship = new Studentship(studentshipDto);
+        // grade parameters are unchanged if not provided
         updatedStudentship.setGradeParameters(
             updatedStudentship.getGradeParameters() != null ? updatedStudentship.getGradeParameters()
                 : studentship.getGradeParameters()

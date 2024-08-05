@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.repository.CandidateRepository;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.EntitityAlreadyExists;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.NotFoundException;
 
 
@@ -19,6 +20,9 @@ public class CandidateService {
     private CandidateRepository candidateRepository;
 
     public CandidateDto createCandidate(CandidateDto candidateDto) {
+        if (candidateRepository.findById(candidateDto.getIstId()).isPresent()) {
+            throw new EntitityAlreadyExists("Candidate with IST ID " + candidateDto.getIstId() + " already exists");
+        }
         Candidate candidate = new Candidate(candidateDto);
         candidateRepository.save(candidate);
         return new CandidateDto(candidate);

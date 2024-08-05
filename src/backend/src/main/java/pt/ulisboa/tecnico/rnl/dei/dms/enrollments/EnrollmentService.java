@@ -13,6 +13,7 @@ import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.EnrollmentId;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.EnrollmentDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.repository.CandidateRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.repository.EnrollmentRepository;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.EntitityAlreadyExists;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.NotFoundException;
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain.GradeParameter;
 import pt.ulisboa.tecnico.rnl.dei.dms.studentships.domain.Studentship;
@@ -41,6 +42,9 @@ public class EnrollmentService {
         Studentship studentship = studentshipRepository.findById(enrollmentDto.getStudentshipId()).orElseThrow(
             () -> new NotFoundException("Studentship with ID " + enrollmentDto.getStudentshipId() + " not found")
         );
+        if (enrollmentRepository.findById(new EnrollmentId(enrollmentDto.getCandidateIstId(), enrollmentDto.getStudentshipId())).isPresent()) {
+            throw new EntitityAlreadyExists("Enrollment with Candidate IST ID " + enrollmentDto.getCandidateIstId() + " and Studentship ID " + enrollmentDto.getStudentshipId() + " already exists");
+        }
         Map<GradeParameter, Double> grades = enrollmentDto.getGrades() != null ? this.gradeFromIds(enrollmentDto.getGrades()) : Map.of();   
         // TODO: Consider checking if grade parameters are from the same studentship
         // Perhaps desnecessary since nothing of importance happens if they are not
