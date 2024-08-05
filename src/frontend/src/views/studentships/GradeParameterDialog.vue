@@ -11,9 +11,8 @@
   <!-- Dialogue Container -->
   <v-card prepend-icon="mdi-abacus" title="Editar Parâmetros">
   <v-form ref="form" @submit.prevent="submitForm()">
-
     <v-card-text>
-      <v-row class="text-center align-center" v-for="parameter in parameters.concat(newParameters).filter((v) => v.change !== 'delete')" :key="parameter.id">
+      <v-row class="text-center align-center" v-for="(parameter, idx) in params" :key="idx">
         <v-col>
           <v-text-field
             v-model="parameter.name"
@@ -36,7 +35,7 @@
         </v-col>
         <v-col cols="auto">
           <v-btn
-            @click="deleteParameter(parameter)"
+            @click="deleteParameter(idx)"
             color="error"
             variant="text"
             icon="mdi-delete"
@@ -47,12 +46,11 @@
       <v-row>
         <v-col class="text-center">
           <v-btn
-            @click="newParameters.push({ name: '', weight: 0 })"
+            @click="params.push({ name: '', weight: 0 })"
             prepend-icon="mdi-plus"
             text="Adicionar Parâmetro"
             color="primary"
-          >
-          </v-btn>
+          ></v-btn>
         </v-col>
       </v-row>
     </v-card-text>
@@ -83,30 +81,21 @@ import { VForm } from 'vuetify/lib/components/index.mjs';
 
 import { ref } from 'vue'
 import type { Ref } from 'vue'
-import type CandidateDto from '@/models/candidates/CandidateDto'
 import RemoteService from '@/services/RemoteService'
-import GradeParameterDto from '@/models/grades/GradeParameterDto';
 
 const dialog = ref(false)
 const form: Ref<null | VForm> = ref(null)
-const emit = defineEmits(['parameters-saved'])
+const emit = defineEmits(['studentship-saved'])
 
+const params = ref([] as { id?: number, name: string, weight: number }[])
 
 const props = defineProps<{
-  studentshipId: number;
+  id: number;
 }>();
 
-const deleteParameter = (parameter: GradeParameterDto & {change?: 'update' | 'delete'}) => {
-  if (parameter.id) {
-    parameter.change = 'delete'
-  } else {
-    newParameters.value.splice(newParameters.value.indexOf(parameter), 1)
-  }
+const deleteParameter = (idx: number) => {
+  params.value.splice(idx, 1);
 }
-
-const parameters: Ref<(GradeParameterDto & {change?: 'update' | 'delete'})[]> = ref([]);
-const newParameters: Ref<GradeParameterDto[]> = ref([]);
-
 
 const submitForm = () => {
   form.value!.validate().then(({valid}) => {
@@ -118,32 +107,21 @@ const submitForm = () => {
 }
 
 const saveParameters = async () => {
-  for (let parameter of parameters.value) {
-    if (parameter.change === 'update') {
-      await RemoteService.updateGradeParameter(parameter);
-    } else if (parameter.change === 'delete') {
-      await RemoteService.deleteGradeParameter(parameter);
-    }
-  }
-  for (let parameter of newParameters.value) {
-    parameter.studentshipId = props.studentshipId;
-    await RemoteService.createGradeParameter(parameter);
-  }
-  newParameters.value.splice(0, newParameters.value.length);
-  getParameters()
-  emit('parameters-saved')
+  RemoteService.getStudentship(props.id).then(async (data) => {
+    data.gradeParameters = params.value;
+    RemoteService.updateStudentship(data).then(() => {
+      console.log("Value after update: ", data);
+      emit('studentship-saved')
+    })
+  })
 }
 
-getParameters();
-async function getParameters() {
-  parameters.value.splice(0, parameters.value.length)
-  newParameters.value.splice(0, newParameters.value.length);
-  RemoteService.getGradeParameters(props.studentshipId).then((data) => {
-    data.forEach((parameter) => {
-      parameters.value.push(parameter)
-    })
-  });
+const getParameters = async () => {
+  RemoteService.getStudentship(props.id).then(async (data) => {
+    params.value = data ? data.gradeParameters : [];
+  })
 }
+getParameters();
 
 const nameRules = [
   (v: string) => v ? true : 'Nome é obrigatório.',

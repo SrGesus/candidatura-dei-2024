@@ -1,74 +1,73 @@
 <template>
-<v-dialog v-model="dialog" max-width="400">
+  <v-dialog v-model="dialog" max-width="400">
+    
+    <!-- Activator -->
+    <template v-slot:activator="{ props: activatorProps }">
+      <div v-bind="activatorProps" style="cursor: pointer;">
+        <slot></slot>
+      </div>
+    </template>
   
-  <!-- Activator -->
-  <template v-slot:activator="{ props: activatorProps }">
-    <div v-bind="activatorProps" style="cursor: pointer;">
-      <slot></slot>
-    </div>
+    <!-- Dialogue Container -->
+    <v-card prepend-icon="mdi-account" :title="title">
+    <v-form ref="form" @submit.prevent="submitForm()">
+  
+      <v-card-text>
+        <v-number-input
+          label="IST ID*" 
+          required 
+          v-model.number="candidate.istId"
+          :rules="istIdRules"
+          :min="0"
+          :disabled="!!props.edit"
+        ></v-number-input>
+  
+        <v-text-field 
+          label="Nome*" 
+          required 
+          v-model="candidate.name"
+          :rules="nameRules"
+        ></v-text-field>
+  
+        <v-text-field 
+          label="E-Mail*" 
+          required 
+          v-model="candidate.email"
+          :rules="emailRules"
+          inputmode="email"
+        ></v-text-field>
+      </v-card-text>
+  
+      <v-divider></v-divider>
+  
+      <v-card-actions>
+        <v-spacer></v-spacer>
+  
+        <v-btn 
+          text="Cancelar" 
+          variant="plain" 
+          @click="dialog = false"
+        ></v-btn>
+        <v-btn
+          type="submit"
+          color="primary"
+          text="Guardar"
+          variant="tonal"
+        ></v-btn>
+      </v-card-actions>
+    </v-form>
+    </v-card>
+  
+  </v-dialog>
   </template>
-
-  <!-- Dialogue Container -->
-  <v-card prepend-icon="mdi-account" :title="title">
-  <v-form ref="form" @submit.prevent="submitForm()">
-
-    <v-card-text>
-      <v-number-input
-        label="IST ID*" 
-        required 
-        v-model.number="candidate.istId"
-        :rules="istIdRules"
-        :min="0"
-        :disabled="!!props.edit"
-      ></v-number-input>
-
-      <v-text-field 
-        label="Nome*" 
-        required 
-        v-model="candidate.name"
-        :rules="nameRules"
-      ></v-text-field>
-
-      <v-text-field 
-        label="E-Mail*" 
-        required 
-        v-model="candidate.email"
-        :rules="emailRules"
-        validate-on="blur"
-        inputmode="email"
-      ></v-text-field>
-    </v-card-text>
-
-    <v-divider></v-divider>
-
-    <v-card-actions>
-      <v-spacer></v-spacer>
-
-      <v-btn 
-        text="Cancelar" 
-        variant="plain" 
-        @click="dialog = false"
-      ></v-btn>
-      <v-btn
-        type="submit"
-        color="primary"
-        text="Guardar"
-        variant="tonal"
-      ></v-btn>
-    </v-card-actions>
-  </v-form>
-  </v-card>
-
-</v-dialog>
-</template>
-
+  
 <script setup lang="ts">
 import { VNumberInput } from 'vuetify/labs/VNumberInput';
 import { VForm } from 'vuetify/lib/components/index.mjs';
 
 import { ref } from 'vue'
 import type { Ref } from 'vue'
-import type CandidateDto from '@/models/candidates/CandidateDto'
+import CandidateDto from '@/models/CandidateDto'
 import RemoteService from '@/services/RemoteService'
 
 const dialog = ref(false)
@@ -82,11 +81,7 @@ const props = defineProps<{
 const title = props.edit ? 'Editar Candidato' : 'Novo Candidato';
 
 const candidate = ref<CandidateDto>(
-  props.edit ? { ...props.edit } : {
-    istId: 0,
-    name: '',
-    email: ''
-  }
+  new CandidateDto(props.edit ? props.edit : {})
 )
 
 const submitForm = () => {
@@ -120,7 +115,7 @@ const istIdRules = [
     return  Number.isInteger(istId) ? true : 'IST ID têm de ser um inteiro.'
   },
   async (istId: number) => {
-    return !props.edit && await RemoteService.getCandidate(istId) ? 'Candidato com este IST ID já foi registado.' : true
+    return !props.edit && await RemoteService.candidateExists(istId) ? 'Candidato com este IST ID já foi registado.' : true
   }
 ];
 

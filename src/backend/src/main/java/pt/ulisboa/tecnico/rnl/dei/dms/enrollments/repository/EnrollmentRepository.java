@@ -12,6 +12,6 @@ import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.EnrollmentId;
 @Repository
 @Transactional
 public interface EnrollmentRepository extends JpaRepository<Enrollment, EnrollmentId> {
-    List<Enrollment> findByCandidateIstId(Long candidateIstId);
-    List<Enrollment> findByStudentshipId(Long studentshipId);
+    List<Enrollment> findByCandidateIstIdOrderByStudentshipId(Long candidateIstId);
+    List<Enrollment> findByStudentshipIdOrderByCandidateIstId(Long studentshipId);
 }

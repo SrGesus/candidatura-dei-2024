@@ -29,7 +29,14 @@ public class CandidateService {
     }
 
     public List<CandidateDto> getAllCandidates() {
-        return candidateRepository.findAll().stream().map(CandidateDto::new).collect(Collectors.toList());
+        return candidateRepository.findAllByOrderByIstId().stream().map(CandidateDto::new).collect(Collectors.toList());
+    }
+
+    public CandidateDto getCandidate(Long istId) {
+        Candidate candidate = candidateRepository.findById(istId).orElseThrow(
+            () -> new NotFoundException("Candidate with IST ID " + istId + " not found")
+        );
+        return new CandidateDto(candidate);
     }
 
     public CandidateDto updateCandidate(CandidateDto candidateDto) {

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.EnrollmentId;
@@ -35,15 +36,16 @@ public class EnrollmentService {
     @Autowired
     private GradeParameterRepository gradeParameterRepository;
 
+    @Transactional
     public EnrollmentDto createEnrollment(EnrollmentDto enrollmentDto) {
-        Candidate candidate = candidateRepository.findById(enrollmentDto.getCandidateIstId()).orElseThrow(
-            () -> new NotFoundException("Candidate with IST ID " + enrollmentDto.getCandidateIstId() + " not found")
+        Candidate candidate = candidateRepository.findById(enrollmentDto.getCandidate().getIstId()).orElseThrow(
+            () -> new NotFoundException("Candidate with IST ID " + enrollmentDto.getCandidate().getIstId() + " not found")
         );
-        Studentship studentship = studentshipRepository.findById(enrollmentDto.getStudentshipId()).orElseThrow(
-            () -> new NotFoundException("Studentship with ID " + enrollmentDto.getStudentshipId() + " not found")
+        Studentship studentship = studentshipRepository.findById(enrollmentDto.getStudentship().getId()).orElseThrow(
+            () -> new NotFoundException("Studentship with ID " + enrollmentDto.getStudentship().getId() + " not found")
         );
-        if (enrollmentRepository.findById(new EnrollmentId(enrollmentDto.getCandidateIstId(), enrollmentDto.getStudentshipId())).isPresent()) {
-            throw new EntitityAlreadyExists("Enrollment with Candidate IST ID " + enrollmentDto.getCandidateIstId() + " and Studentship ID " + enrollmentDto.getStudentshipId() + " already exists");
+        if (enrollmentRepository.findById(new EnrollmentId(enrollmentDto.getCandidate().getIstId(), enrollmentDto.getStudentship().getId())).isPresent()) {
+            throw new EntitityAlreadyExists("Enrollment with Candidate IST ID " + enrollmentDto.getCandidate().getIstId() + " and Studentship ID " + enrollmentDto.getStudentship().getId() + " already exists");
         }
         Map<GradeParameter, Double> grades = enrollmentDto.getGrades() != null ? this.gradeFromIds(enrollmentDto.getGrades()) : Map.of();   
         // TODO: Consider checking if grade parameters are from the same studentship
@@ -58,16 +60,17 @@ public class EnrollmentService {
     }
 
     public List<EnrollmentDto> getEnrollmentsByCandidateIstId(Long candidateIstId) {
-        return enrollmentRepository.findByCandidateIstId(candidateIstId).stream().map(EnrollmentDto::new).collect(Collectors.toList());
+        return enrollmentRepository.findByCandidateIstIdOrderByStudentshipId(candidateIstId).stream().map(EnrollmentDto::new).collect(Collectors.toList());
     }
 
     public List<EnrollmentDto> getEnrollmentsByStudentshipId(Long studentshipId) {
-        return enrollmentRepository.findByStudentshipId(studentshipId).stream().map(EnrollmentDto::new).collect(Collectors.toList());
+        return enrollmentRepository.findByStudentshipIdOrderByCandidateIstId(studentshipId).stream().map(EnrollmentDto::new).collect(Collectors.toList());
     }
 
+    @Transactional
     public EnrollmentDto updateEnrollment(EnrollmentDto enrollmentDto) {
-        Enrollment enrollment = enrollmentRepository.findById(new EnrollmentId(enrollmentDto.getCandidateIstId(), enrollmentDto.getStudentshipId())).orElseThrow(
-            () -> new NotFoundException("Enrollment with Candidate IST ID " + enrollmentDto.getCandidateIstId() + " and Studentship ID " + enrollmentDto.getStudentshipId() + " not found")
+        Enrollment enrollment = enrollmentRepository.findById(new EnrollmentId(enrollmentDto.getCandidate().getIstId(), enrollmentDto.getStudentship().getId())).orElseThrow(
+            () -> new NotFoundException("Enrollment with Candidate IST ID " + enrollmentDto.getCandidate().getIstId() + " and Studentship ID " + enrollmentDto.getStudentship().getId() + " not found")
         );
         enrollment.setAccepted(enrollmentDto.getAccepted());
         enrollment.setGrades(enrollmentDto.getGrades() != null ? this.gradeFromIds(enrollmentDto.getGrades()) : enrollment.getGrades());

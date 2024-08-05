@@ -57,9 +57,17 @@ public class EnrollmentController {
     }
 
     @Transactional
+    @PutMapping("/update/batch")
+    public List<EnrollmentDto> updateEnrollments(@RequestBody List<EnrollmentDto> enrollmentDtos) {
+        return enrollmentDtos.stream()
+            .map(e -> enrollmentService.updateEnrollment(e))
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
     @DeleteMapping("/delete/batch")
     public void deleteEnrollments(@RequestBody List<EnrollmentDto> enrollmentDtos) {
-        enrollmentDtos.forEach(e -> enrollmentService.deleteEnrollment(e.getCandidateIstId(), e.getStudentshipId()));
+        enrollmentDtos.forEach(e -> enrollmentService.deleteEnrollment(e.getCandidate().getIstId(), e.getStudentship().getId()));
     }
 
     

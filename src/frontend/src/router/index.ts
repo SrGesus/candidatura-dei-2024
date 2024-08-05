@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import MaterialView from '@/views/materials/MaterialView.vue'
 import CandidateView from '@/views/candidates/CandidateView.vue'
+import CandidateEnrollmentsView from '@/views/enrollments/CandidateEnrollmentsView.vue'
 import StudentshipView from '@/views/studentships/StudentshipView.vue'
-import StudentshipEnrollmentsView from '@/views/studentships/StudentshipEnrollmentsView.vue'
+import StudentshipEnrollmentsView from '@/views/enrollments/StudentshipEnrollmentsView.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,34 +15,15 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/about',
-      name: 'about',
-      component: HomeView
-    },
-    {
-      path: '/contact',
-      name: 'contact',
-      component: HomeView
-    },
-    {
-      path: '/materials',
-      name: 'materials',
-      component: MaterialView
-    },
-    {
       path: '/candidates',
       name: 'candidates',
       component: CandidateView
     },
     {
-      path: '/register',
-      name: 'register',
-      component: HomeView
-    },
-    {
-      path: '/profile',
-      name: 'profile',
-      component: HomeView
+      path: '/candidate/:istId',
+      name: 'candidate',
+      component: CandidateEnrollmentsView,
+      props: route => ({ istId: Number(route.params.istId) })
     },
     {
       path: '/studentships',
@@ -49,11 +31,12 @@ const router = createRouter({
       component: StudentshipView
     },
     {
-      path: '/studentships/:id',
+      path: '/studentship/:id',
       name: 'studentship',
       component: StudentshipEnrollmentsView,
       props: route => ({ id: Number(route.params.id) })
-    },
+    }
+
   ]
 })
 

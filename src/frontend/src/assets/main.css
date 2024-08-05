@@ -25,7 +25,10 @@ a,
   background-color: rgba(125, 125, 125, 0.2)
 }
 
-rgba(125, 125, 125, 0.2)
+/* Alternative for disabled that doesn't change aesthetics */
+.disable-events {
+  pointer-events: none
+}
 
 
 th {

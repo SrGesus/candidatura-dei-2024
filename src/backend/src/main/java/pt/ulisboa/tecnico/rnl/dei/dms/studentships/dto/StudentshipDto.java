@@ -67,6 +67,10 @@ public class StudentshipDto {
         return gradeParameters;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }

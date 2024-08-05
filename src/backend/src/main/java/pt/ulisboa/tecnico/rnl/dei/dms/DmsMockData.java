@@ -59,35 +59,63 @@ public class DmsMockData implements CommandLineRunner {
                 new GradeParameterDto("Entrevista", 10.0),
                 new GradeParameterDto("Avaliação Curricular", 10.0)
             )),
+            new StudentshipDto(LocalDate.of(2024, 1, 1), LocalDate.of(2025, 1, 1), 598.80, 3, false, List.of(
+                new GradeParameterDto("Exercício Prático", 10.0),
+                new GradeParameterDto("Avaliação Curricular", 10.0)
+            )),
         };
+        for (int i = 0; i < studentships.length; i++) {
+            studentships[i].setId(i + 1L);
+        }
         for (StudentshipDto studentship : studentships) {
             studentshipService.createStudentship(studentship);
         }
 
         // Enrollments
         EnrollmentDto[] enrollments = {
-            new EnrollmentDto(100000L, 1L, false, Map.of(
+            new EnrollmentDto(candidates[0], studentships[0], false, Map.of(
                 1L, 9.0
             )),
-            new EnrollmentDto(100000L, 2L, false, Map.of()),
-            new EnrollmentDto(100001L, 1L, false, Map.of()),
-            new EnrollmentDto(100002L, 2L, false, Map.of(
+            new EnrollmentDto(candidates[0], studentships[1], false, Map.of()),
+            new EnrollmentDto(candidates[1], studentships[0], false, Map.of()),
+            new EnrollmentDto(candidates[2], studentships[1], false, Map.of(
                 3L, 9.0,
                 4L, 6.0,
                 5L, 2.0
             )),
-            new EnrollmentDto(100003L, 2L, false, Map.of(
+            new EnrollmentDto(candidates[3], studentships[1], false, Map.of(
                 3L, 8.0,
                 4L, 5.0,
                 5L, 4.0
             )),
-            new EnrollmentDto(100004L, 2L, false, Map.of(
+            new EnrollmentDto(candidates[4], studentships[1], false, Map.of(
                 
             )),
-            new EnrollmentDto(100005L, 2L, false, Map.of(
+            new EnrollmentDto(candidates[5], studentships[1], false, Map.of(
                 
             )),
-            new EnrollmentDto(100004L, 3L, false, Map.of()),
+            new EnrollmentDto(candidates[4], studentships[2], false, Map.of()),
+            new EnrollmentDto(candidates[5], studentships[2], false, Map.of()),
+            new EnrollmentDto(candidates[0], studentships[3], false, Map.of(
+                8L, 3.0,
+                9L, 7.0
+            )),
+            new EnrollmentDto(candidates[1], studentships[3], true, Map.of(
+                8L, 5.0,
+                9L, 9.0
+            )),
+            new EnrollmentDto(candidates[2], studentships[3], false, Map.of(
+                8L, 5.0,
+                9L, 2.0
+            )),
+            new EnrollmentDto(candidates[3], studentships[3], true, Map.of(
+                8L, 7.0,
+                9L, 8.0
+            )),
+            new EnrollmentDto(candidates[4], studentships[3], false, Map.of(
+                8L, 0.0,
+                9L, 6.0
+            )),
         };
         for (EnrollmentDto enrollment : enrollments) {
             enrollmentService.createEnrollment(enrollment);

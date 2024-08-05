@@ -24,6 +24,11 @@ public class CandidateController {
         return candidateService.getAllCandidates();
     }
 
+    @GetMapping("/{istId}")
+    public CandidateDto getCandidate(@PathVariable Long istId) {
+        return candidateService.getCandidate(istId);
+    }
+
     @PutMapping("/update")
     public CandidateDto updateCandidate(@RequestBody CandidateDto candidateDto) {
         return candidateService.updateCandidate(candidateDto);

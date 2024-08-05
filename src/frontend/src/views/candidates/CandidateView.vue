@@ -15,6 +15,8 @@
     </v-col>
   </v-row>
 
+  <v-divider></v-divider>
+
   <v-text-field
     v-model="search"
     label="Search"
@@ -31,54 +33,61 @@
     :custom-filter="fuzzySearch"
     class="text-left"
   >
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-row>
-        <CandidateDialog :edit="item" @candidate-saved="getCandidates">
-          <v-icon class="mr-2">mdi-pencil</v-icon>
-        </CandidateDialog>
-        <v-icon @click="deleteCandidate(item)">mdi-delete</v-icon>
-      </v-row>
+    <template v-slot:item="{ item }">
+      <tr class="clickable-rows" @click="rowClick(item)">
+        <td>{{ item.istId }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.email }}</td>
+        <td>
+          <v-row>
+            <CandidateDialog :edit="item" @candidate-saved="getCandidates">
+              <v-icon class="mr-2">mdi-pencil</v-icon>
+            </CandidateDialog>
+            <v-icon @click.stop="deleteCandidate(item)">mdi-delete</v-icon>
+          </v-row>
+        </td>
+      </tr>
     </template>
   </v-data-table>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import RemoteService from '@/services/RemoteService'
+import CandidateDialog from '@/views/candidates/CandidateDialog.vue';
 
-import { reactive } from 'vue'
-import type CandidateDto from '@/models/candidates/CandidateDto'
-import CandidateDialog from './CandidateDialog.vue'
+import { reactive, ref } from 'vue';
+
+import RemoteService from '@/services/RemoteService';
+import { fuzzySearch } from '@/utils/utils';
+import CandidateDto from '@/models/CandidateDto';
+import router from '@/router';
+import { align } from '@/utils/utils';
 
 const search = ref('')
+const candidates = reactive([] as CandidateDto[]);
 const headers = [
   { title: 'IST ID', value: 'istId', key: 'istId' },
-  { title: 'Name', value: 'name', key: 'name ' },
+  { title: 'Name', value: 'name', key: 'name' },
   { title: 'E-Mail', value: 'email', key: 'email' },
-  { title: 'Ações', value: 'actions', key: 'actions' }
-]
+  { title: 'Ações', value: 'actions', key: 'actions', align: 'start' as align }
+];
 
-const candidates: CandidateDto[] = reactive([])
-
-getCandidates()
-async function getCandidates() {
-  candidates.splice(0, candidates.length)
-  RemoteService.getCandidates().then(async (data) => {
-    data.forEach((candidate: CandidateDto) => {
-      candidates.push(candidate)
-    })
-  })
+const getCandidates = async () => {
+  candidates.splice(0, candidates.length);
+  RemoteService.getCandidates().then((data) => {
+    candidates.push(...data);
+  });
 }
 
-function deleteCandidate(candidate: CandidateDto) {
+getCandidates();
+
+const deleteCandidate = (candidate: CandidateDto) => {
   RemoteService.deleteCandidate(candidate).then(() => {
-    getCandidates()
-  })
+    getCandidates();
+  });
 }
 
-const fuzzySearch = (value: string, search: string) => {
-  // Regex to match any character in between the search characters
-  let searchRegex = new RegExp(search.split('').join('.*'), 'i')
-  return searchRegex.test(value)
+const rowClick = (row: CandidateDto) => {
+  router.push({ name: 'candidate', params: { istId: row.istId } });
 }
+
 </script>

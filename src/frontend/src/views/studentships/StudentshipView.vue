@@ -11,7 +11,7 @@
           text="Adicionar Bolsa"
           color="primary"
         ></v-btn>
-      </StudentshipDialog>
+      </StudentshipDialog>  
     </v-col>
   </v-row>
 
@@ -25,48 +25,59 @@
   ></v-text-field>
 
   <v-data-table
+    :group-by="[{key: 'active', order: 'desc'}]"
     :headers="headers"
     :items="studentships"
     :search="search"
     :custom-filter="fuzzySearch"
     class="text-left"
   >
-  <template v-slot:item="{ item }">
-    <tr class="clickable-rows" @click="rowClick(item)">
-      <td>{{ item.id }}</td>
-      <td>{{ item.startDate.toLocaleDateString() }}</td>
-      <td>{{ item.endDate.toLocaleDateString() }}</td>
-      <td>{{ item.pay.toFixed(2) }} €</td>
-      <td><v-chip>{{ item.vacancies }}</v-chip></td>
-      <td>
-        <v-row>
-          <StudentshipDialog :edit="item" :studentship="item" @studentship-saved="getStudentships">
-            <v-icon class="mr-2">mdi-pencil</v-icon>
-          </StudentshipDialog>
-          <v-icon @click="deleteStudentship(item)">mdi-delete</v-icon>
-        </v-row>
-      </td>
-    </tr>
-  </template>
-  
+    <template v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }">
+      <tr class="clickable-rows" @click="toggleGroup(item)">
+        <td :colspan="columns.length">
+          <v-btn
+            :icon="isGroupOpen(item) ? '$expand' : '$next'"
+            size="small"
+            variant="text"
+            disabled
+          ></v-btn>
+          {{ item.value ? 'Bolsas com Candidaturas Abertas' : 'Bolsas Passadas' }}
+        </td>
+      </tr>
+    </template>
+    <template v-slot:item="{ item }">
+      <tr class="clickable-rows" @click="rowClick(item)">
+        <td></td>
+        <td>{{ item.id }}</td>
+        <td>{{ item.startDate.toLocaleDateString() }}</td>
+        <td>{{ item.endDate.toLocaleDateString() }}</td>
+        <td>{{ item.amount.toFixed(2) }} €</td>
+        <td><v-chip>{{ item.vacancies }}</v-chip></td>
+        <td>
+          <v-row>
+            <StudentshipDialog :edit="item" :studentship="item" @studentship-saved="getStudentships">
+              <v-icon class="mr-2">mdi-pencil</v-icon>
+            </StudentshipDialog>
+            <v-icon @click.stop="deleteStudentship(item)">mdi-delete</v-icon>
+          </v-row>
+        </td>
+      </tr>
+    </template>
   </v-data-table>
+
 </template>
 
 <script setup lang="ts">
-const rowClick = (obj) => {
-  console.log(obj)
-  router.push({ name: 'studentship', params: { id: obj.id } })
-}
-
-import { ref } from 'vue'
-import RemoteService from '@/services/RemoteService'
-
-import { reactive } from 'vue'
-import type StudentshipDto from '@/models/studentships/StudentshipDto'
+import StudentshipDialog from '@/views/studentships/StudentshipDialog.vue';
+import StudentshipDto from '@/models/StudentshipDto';
 import router from '@/router';
-import StudentshipDialog from './StudentshipDialog.vue';
+import RemoteService from '@/services/RemoteService';
+import { fuzzySearch } from '@/utils/utils';
+import { reactive, ref } from 'vue';
+
 
 const search = ref('')
+const studentships = reactive([] as StudentshipDto[]);
 const headers = [
   { title: 'ID', value: 'id', key: 'id'},
   { title: 'Data de Início', value: 'startDate', key: 'startDate' },
@@ -76,28 +87,22 @@ const headers = [
   { title: 'Ações', value: 'actions', key: 'actions' }
 ]
 
-const studentships: StudentshipDto[] = reactive([])
-
-getStudentships()
-async function getStudentships() {
-  studentships.splice(0, studentships.length)
-  RemoteService.getStudentships().then(async (data) => {
-    data.forEach((studentship: StudentshipDto) => {
-      studentships.push(studentship)
-    })
-  })
+const rowClick = (obj) => {
+  router.push({ name: 'studentship', params: { id: obj.id } })
 }
 
-function deleteStudentship(studentship: StudentshipDto) {
+const getStudentships = async () => {
+  studentships.splice(0, studentships.length)
+  RemoteService.getStudentships().then((data) => {
+    studentships.push(...data)
+  })
+}
+getStudentships()
+
+const deleteStudentship = (studentship: StudentshipDto) => {
   RemoteService.deleteStudentship(studentship).then(() => {
     getStudentships()
   })
 }
 
-const fuzzySearch = (value: string, search: string) => {
-  console.log(value, search)
-  // Regex to match any character in between the search characters
-  let searchRegex = new RegExp(search.split('').join('.*'), 'i')
-  return searchRegex.test(value)
-}
 </script>

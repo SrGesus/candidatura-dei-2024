@@ -5,7 +5,7 @@
         class="text-none font-weight-regular"
         icon="mdi-arrow-left"
         color="tonal"
-        @click="back()"
+        @click="router.back()"
       ></v-btn>
     </v-col>
     <v-col class="d-flex align-center justify-center ml-1" style="gap: 10px;">
@@ -24,6 +24,7 @@
         class="text-none font-weight-regular"
         prepend-icon="mdi-sync"
         text="Repor Valores"
+        :disabled="!newStudentship.active"
         color="green"
         variant="tonal"
         @click="getStudentship()"
@@ -32,17 +33,26 @@
         class="text-none font-weight-regular"
         prepend-icon="mdi-content-save"
         text="Guardar"
+        :disabled="!newStudentship.active"
         color="primary"
         @click="submitForm()"
       ></v-btn>
     </v-col>
   </v-row>
 
-
   
-
   <v-col class="justify-center align-center d-flex">
-    <v-form ref="form" @submit.prevent="submitForm()" style="width: 80%;">
+    <v-form ref="form" style="width: 80%;">
+      <v-alert
+        v-if="!newStudentship.active"
+        class="mb-5"
+        value="true"
+        closable
+        close-label="Fechar"
+      >
+        <strong>Atenção!</strong> Candidaturas para esta bolsa estão encerradas.
+      </v-alert>
+
       <v-number-input
         label="ID*"
         required 
@@ -52,6 +62,7 @@
 
       <v-date-input
         label="Data de Início*" 
+        :disabled="!newStudentship.active"
         required
         readonly
         v-model="newStudentship.startDate"
@@ -63,7 +74,8 @@
       ></v-date-input>
       
       <v-date-input
-        label="Data de Fim*" 
+        label="Data de Fim*"
+        :disabled="!newStudentship.active"
         required
         readonly
         v-model="newStudentship.endDate"
@@ -75,16 +87,18 @@
       ></v-date-input>
 
       <v-number-input
-        label="Valor mensal*" 
+        label="Valor mensal*"
+        :disabled="!newStudentship.active"
         required 
-        v-model.number="newStudentship.pay"
+        v-model.number="newStudentship.amount"
         :rules="payRules"
         :step="20.0"
         prefix="€"
       ></v-number-input>
 
       <v-number-input
-        label="Vagas*" 
+        label="Vagas*"
+        :disabled="!newStudentship.active"
         required 
         v-model.number="newStudentship.vacancies"
         :rules="vacanciesRules"
@@ -101,30 +115,20 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 
 import RemoteService from '@/services/RemoteService'
-import type StudentshipDto from '@/models/studentships/StudentshipDto';
+import StudentshipDto from '@/models/StudentshipDto';
 
-const dialog = ref(false)
 const form: Ref<null | VForm> = ref(null)
 
 const props = defineProps<{
   studentshipId: number;
 }>();
 
-const newStudentship = ref({
-  id: 0,
-  startDate: new Date(),
-  endDate: new Date(),
-  pay: 0,
-  vacancies: 0
-} as StudentshipDto
-);
+const newStudentship = ref(new StudentshipDto({}));
 
 getStudentship()
 async function getStudentship() {
   RemoteService.getStudentship(props.studentshipId).then(async (data) => {
-    newStudentship.value = data
-    newStudentship.value.startDate = new Date(data.startDate!);
-    newStudentship.value.endDate = new Date(data.endDate!);
+    newStudentship.value = data;
   })
 }
 
@@ -133,12 +137,10 @@ const submitForm = async () => {
   const { valid } = await form.value!.validate()
   if (valid) {
     saveStudentship()
-    dialog.value = false;
   }
 }
 const emit = defineEmits(['studentship-saved'])
 const saveStudentship = async () => {
-  console.log(newStudentship.value)
   await RemoteService.updateStudentship(newStudentship.value)
   getStudentship()
   emit('studentship-saved')
@@ -166,12 +168,8 @@ import router from '@/router';
 
 function deleteStudentship() {
   RemoteService.deleteStudentship(newStudentship.value).then(() => {
-    back()
+    router.back()
   })
-}
-
-function back() {
-  router.back()
 }
 
 </script>

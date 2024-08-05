@@ -28,7 +28,7 @@ public class StudentshipService {
     }
 
     public List<StudentshipDto> getAllStudentships() {
-        return studentshipRepository.findAll().stream().map(StudentshipDto::new).collect(Collectors.toList());
+        return studentshipRepository.findAllByOrderById().stream().map(StudentshipDto::new).collect(Collectors.toList());
     }
 
     public StudentshipDto getStudentship(Long id) {

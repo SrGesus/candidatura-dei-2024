@@ -23,7 +23,7 @@ git clone git@github.com:SrGesus/candidatura-dei-2024.git
 Go to the project directory
 
 ```bash
-cd dei-cms-gabriel-ferreira/
+cd candidatura-dei-2024/
 ```
 
 ### Database

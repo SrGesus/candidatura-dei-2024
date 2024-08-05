@@ -48,8 +48,8 @@
       <v-number-input
         label="Valor mensal*" 
         required 
-        v-model.number="studentship.pay"
-        :rules="payRules"
+        v-model.number="studentship.amount"
+        :rules="amountRules"
         :step="20.0"
         prefix="€"
       ></v-number-input>
@@ -92,7 +92,7 @@ import { VForm } from 'vuetify/lib/components/index.mjs';
 
 import { ref } from 'vue'
 import type { Ref } from 'vue'
-import type StudentshipDto from '@/models/studentships/StudentshipDto'
+import StudentshipDto from '@/models/StudentshipDto'
 import RemoteService from '@/services/RemoteService'
 
 const dialog = ref(false)
@@ -106,11 +106,7 @@ const props = defineProps<{
 const title = props.edit ? 'Editar Bolsa' : 'Nova Bolsa';
 
 const studentship = ref<StudentshipDto>(
-  props.edit ? { 
-    ...props.edit,
-    startDate: new Date(props.edit.startDate!),
-    endDate: new Date(props.edit.endDate!)
-  } : {}
+  new StudentshipDto(props.edit || {})
 )
 
 const submitForm = () => {
@@ -127,8 +123,8 @@ const saveStudentship = async () => {
     await RemoteService.updateStudentship(studentship.value)
   } else {
     await RemoteService.createStudentship(studentship.value)
+    studentship.value = new StudentshipDto({})
   }
-  studentship.value = {}
   emit('studentship-saved')
 }
 
@@ -142,7 +138,7 @@ const endDateRules = [
   () => studentship.value.endDate! > studentship.value.startDate! ? true : 'Data de Fim tem de ser depois da Data de Início.',
 ];
 
-const payRules = [
+const amountRules = [
   (pay: number) => pay > 0 ? true : 'Valor mensal é obrigatório.'
 ];
 
