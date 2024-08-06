@@ -1,5 +1,5 @@
 <template>
-  <v-row class="d-flex align-center" style="margin-bottom: 1%; margin-top: 1%; ">
+  <v-row class="d-flex align-center mt-1">
     <v-col class="d-flex align-center justify-start ml-1" style="gap: 10px;">
       <v-btn
         class="text-none font-weight-regular"
