@@ -21,8 +21,8 @@ a,
   }
 }
 
-.clickable-rows:hover td {
-  background-color: rgba(125, 125, 125, 0.2)
+.clickable-rows:hover {
+  background-color: rgba(125, 125, 125, 0.2);
 }
 
 /* Alternative for disabled that doesn't change aesthetics */

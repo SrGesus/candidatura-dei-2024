@@ -4,6 +4,7 @@ import CandidateView from '@/views/candidates/CandidateView.vue'
 import CandidateEnrollmentsView from '@/views/enrollments/CandidateEnrollmentsView.vue'
 import StudentshipView from '@/views/studentships/StudentshipView.vue'
 import StudentshipEnrollmentsView from '@/views/enrollments/StudentshipEnrollmentsView.vue'
+import EnrollmentView from '@/views/enrollments/EnrollmentView.vue'
 
 
 const router = createRouter({
@@ -35,6 +36,11 @@ const router = createRouter({
       name: 'studentship',
       component: StudentshipEnrollmentsView,
       props: route => ({ id: Number(route.params.id) })
+    },
+    {
+      path: '/enrollments',
+      name: 'enrollments',
+      component: EnrollmentView
     }
 
   ]

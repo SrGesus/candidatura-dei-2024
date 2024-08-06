@@ -15,7 +15,6 @@
     </v-col>
   </v-row>
 
-  <v-divider></v-divider>
 
   <v-text-field
     v-model="search"

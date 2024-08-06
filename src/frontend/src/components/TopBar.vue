@@ -13,6 +13,7 @@ import NavBar from '@/components/NavBar.vue'
 const navbarItemsRight = [
   { name: 'Bolsas', path: '/studentships', icon: 'mdi-briefcase' },
   { name: 'Candidatos', path: '/candidates', icon: 'mdi-account-group' },
+  { name: 'Candidaturas', path: '/enrollments', icon: 'mdi-form-select' }
 ]
 
 const navbarItemsLeft = [

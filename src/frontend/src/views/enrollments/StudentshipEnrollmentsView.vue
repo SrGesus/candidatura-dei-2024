@@ -105,7 +105,7 @@
         ></v-btn>
       <v-alert
         v-else-if="!studentship.active"
-        variant="outlined"
+        variant="outlined"  density="compact"
         :type="item.accepted ? 'success' : 'error'"
       ><strong>{{ item.accepted ? 'Selecionado' : 'Não selecionado' }}</strong></v-alert>
     </template>
@@ -275,6 +275,7 @@ const getStudentship = async () => {
 getStudentship();
 
 const getEnrollments = async () => {
+  await changeCurrent(null);
   enrollments.splice(0, enrollments.length)
   unenrolleds.splice(0, unenrolleds.length)
   RemoteService.getStudentshipEnrollments(props.id).then((data) => {
